@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: garage-management-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://ep-solitary-tooth-a1qq92pa-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require}
+    username: ${DB_USER:neondb_owner}
+    password: ${DB_PASSWORD:npg_jqXyvG4foF6s}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 5
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      connection-timeout: 30000
+      auto-commit: true
+      pool-name: HikariPool
+  main:
+    lazy-initialization: true
+app:
+  jwt:
+    secret: ${JWT_SECRET:EhWw6CTgMWwCLNRDy6LmU2cpsrLVobTVID9HE3Oe+sVoWO21kxt1YE6xGFmV7oAB5Qzlf+SarhBSAoKLgihIpg==}
+    expiration: ${JWT_EXPIRATION:8640010}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:86400010}
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  http2:
+    enabled: true

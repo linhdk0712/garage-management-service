@@ -1,0 +1,217 @@
+@startuml ERD
+
+skin rose
+
+
+' Enums
+enum AppointmentStatus {
+    PENDING
+    CONFIRMED
+    COMPLETED
+    CANCELLED
+}
+
+enum WorkOrderStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+}
+
+enum PaymentStatus {
+    PENDING
+    PAID
+    CANCELLED
+}
+
+enum InventoryStatus {
+    IN_STOCK
+    LOW_STOCK
+    OUT_OF_STOCK
+}
+
+' Entities
+class User {
+    + id: Integer <<PK>>
+    + username: String <<unique>>
+    + password: String
+    + email: String <<unique>>
+    + phone: String
+    + enabled: Boolean
+    + createdAt: Instant
+    + lastLogin: Instant
+}
+
+class Role {
+    + id: Integer <<PK>>
+    + name: String <<unique>>
+    + description: String
+}
+
+class UserRole {
+    + id: UserRoleId <<PK>>
+    + user: User <<FK>>
+    + role: Role <<FK>>
+}
+
+class Customer {
+    + id: Integer <<PK>>
+    + firstName: String
+    + lastName: String
+    + phone: String
+    + email: String
+    + address: String
+    + city: String
+    + state: String
+    + zipCode: String
+    + preferredContactMethod: String
+    + notes: String
+    + user: User <<FK>>
+}
+
+class Vehicle {
+    + id: Integer <<PK>>
+    + licensePlate: String <<unique>>
+    + brand: String
+    + model: String
+    + color: String
+    + year: Integer
+    + description: String
+    + customer: Customer <<FK>>
+}
+
+class Staff {
+    + id: Integer <<PK>>
+    + name: String
+    + phone: String
+    + email: String
+    + specialization: String
+    + user: User <<FK>>
+}
+
+class Appointment {
+    + id: Integer <<PK>>
+    + appointmentDate: LocalDateTime
+    + description: String
+    + status: AppointmentStatus
+    + customer: Customer <<FK>>
+    + vehicle: Vehicle <<FK>>
+    + workOrder: WorkOrder <<FK>>
+}
+
+class WorkOrder {
+    + id: Integer <<PK>>
+    + orderNumber: String <<unique>>
+    + startDate: LocalDateTime
+    + endDate: LocalDateTime
+    + status: WorkOrderStatus
+    + description: String
+    + appointment: Appointment <<FK>>
+    + staff: Staff <<FK>>
+}
+
+class VehicleServiceHistory {
+    + id: Integer <<PK>>
+    + serviceDate: LocalDateTime
+    + description: String
+    + vehicle: Vehicle <<FK>>
+    + workOrder: WorkOrder <<FK>>
+}
+
+class SparePart {
+    + id: Integer <<PK>>
+    + name: String
+    + description: String
+    + price: Double
+    + quantity: Integer
+    + status: InventoryStatus
+}
+
+class PartsUsed {
+    + id: Integer <<PK>>
+    + quantity: Integer
+    + price: Double
+    + serviceHistory: VehicleServiceHistory <<FK>>
+    + sparePart: SparePart <<FK>>
+}
+
+class LaborCharge {
+    + id: Integer <<PK>>
+    + description: String
+    + amount: Double
+    + serviceHistory: VehicleServiceHistory <<FK>>
+}
+
+class PurchaseOrder {
+    + id: Integer <<PK>>
+    + orderNumber: String <<unique>>
+    + orderDate: LocalDateTime
+    + totalAmount: Double
+    + status: String
+}
+
+class PurchaseOrderItem {
+    + id: Integer <<PK>>
+    + quantity: Integer
+    + price: Double
+    + purchaseOrder: PurchaseOrder <<FK>>
+    + sparePart: SparePart <<FK>>
+}
+
+class Payment {
+    + id: Integer <<PK>>
+    + amount: Double
+    + paymentDate: LocalDateTime
+    + status: PaymentStatus
+    + workOrder: WorkOrder <<FK>>
+}
+
+class Feedback {
+    + id: Integer <<PK>>
+    + rating: Integer
+    + comment: String
+    + feedbackDate: LocalDateTime
+    + customer: Customer <<FK>>
+    + workOrder: WorkOrder <<FK>>
+}
+
+class Notification {
+    + id: Integer <<PK>>
+    + title: String
+    + message: String
+    + createdAt: LocalDateTime
+    + read: Boolean
+    + user: User <<FK>>
+}
+
+class RefreshToken {
+    + id: Integer <<PK>>
+    + token: String <<unique>>
+    + expiryDate: LocalDateTime
+    + user: User <<FK>>
+}
+
+' Relationships
+User "1" -- "*" UserRole
+Role "1" -- "*" UserRole
+User "1" -- "1" Customer
+User "1" -- "1" Staff
+Customer "1" -- "*" Vehicle
+Customer "1" -- "*" Appointment
+Customer "1" -- "*" Feedback
+Vehicle "1" -- "*" VehicleServiceHistory
+Vehicle "1" -- "*" Appointment
+Staff "1" -- "*" WorkOrder
+Appointment "1" -- "1" WorkOrder
+WorkOrder "1" -- "*" VehicleServiceHistory
+WorkOrder "1" -- "*" Payment
+WorkOrder "1" -- "*" Feedback
+VehicleServiceHistory "1" -- "*" PartsUsed
+VehicleServiceHistory "1" -- "*" LaborCharge
+SparePart "1" -- "*" PartsUsed
+SparePart "1" -- "*" PurchaseOrderItem
+PurchaseOrder "1" -- "*" PurchaseOrderItem
+User "1" -- "*" Notification
+User "1" -- "*" RefreshToken
+
+@enduml 

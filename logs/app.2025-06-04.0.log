@@ -1,0 +1,233 @@
+2025-06-04 20:08:20,285 INFO o.h.v.i.u.Version HV000001: Hibernate Validator 8.0.2.Final
+2025-06-04 20:08:20,314 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 80982 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 20:08:20,314 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 20:08:20,332 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04 20:08:20,332 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04 20:08:20,696 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 20:08:20,777 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 77 ms. Found 19 JPA repository interfaces.
+2025-06-04 20:08:21,123 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 20:08:21,127 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 20:08:21,128 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 20:08:21,128 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 20:08:21,128 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 20:08:21,146 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 20:08:21,146 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 814 ms
+2025-06-04 20:08:22,532 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 20:08:22,552 INFO o.h.Version HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-06-04 20:08:22,565 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 20:08:22,676 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 20:08:23,039 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 20:08:23,578 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 20:08:23,579 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 20:08:23,845 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 20:08:24,122 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 20:08:24,128 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 20:08:24,134 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 20:08:24,263 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 4.184 seconds (process running for 4.85)
+2025-06-04 20:08:30,204 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-04 20:08:30,207 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-04 20:08:30,218 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:26:03,683 INFO o.h.v.i.u.Version HV000001: Hibernate Validator 8.0.2.Final
+2025-06-04 22:26:03,702 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 98300 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 22:26:03,703 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 22:26:03,720 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04 22:26:03,721 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04 22:26:04,104 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 22:26:04,180 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 71 ms. Found 19 JPA repository interfaces.
+2025-06-04 22:26:04,512 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 22:26:04,516 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 22:26:04,516 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:26:04,517 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 22:26:04,517 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 22:26:04,534 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 22:26:04,535 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 814 ms
+2025-06-04 22:26:05,751 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 22:26:05,776 INFO o.h.Version HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-06-04 22:26:05,789 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 22:26:05,905 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 22:26:06,275 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 22:26:06,826 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 22:26:06,828 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:26:07,107 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 22:26:07,379 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:26:07,388 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 22:26:07,394 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 22:26:07,522 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 4.043 seconds (process running for 5.178)
+2025-06-04 22:27:00,707 INFO o.a.c.c.C.[.[.[/] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-04 22:27:00,708 INFO o.s.w.s.DispatcherServlet Initializing Servlet 'dispatcherServlet'
+2025-06-04 22:27:00,784 INFO o.s.w.s.DispatcherServlet Completed initialization in 76 ms
+2025-06-04 22:27:00,815 INFO o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/v3/api-docs/**'], Ant [pattern='/v3/api-docs/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-ui.html'], Ant [pattern='/swagger-ui.html']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-resources/**'], Ant [pattern='/swagger-resources/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/configuration/**'], Ant [pattern='/configuration/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/webjars/**'], Ant [pattern='/webjars/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:27:00,885 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/public'], Ant [pattern='/public']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:38:04,711 INFO o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2025-06-04 22:38:04,723 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-04 22:38:04,724 INFO o.a.c.h.Http11NioProtocol Pausing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:04,726 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-04 22:38:04,727 INFO o.a.c.h.Http11NioProtocol Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:04,749 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:38:05,177 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 98300 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 22:38:05,177 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 22:38:05,305 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 22:38:05,328 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 22 ms. Found 19 JPA repository interfaces.
+2025-06-04 22:38:05,428 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 22:38:05,429 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 22:38:05,429 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:05,429 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 22:38:05,429 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 22:38:05,434 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 22:38:05,434 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 256 ms
+2025-06-04 22:38:06,083 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 22:38:06,090 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 22:38:06,101 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 22:38:06,334 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 22:38:06,514 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 22:38:06,514 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:38:06,659 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 22:38:06,865 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:06,866 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 22:38:06,870 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 22:38:06,959 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 1.8 seconds (process running for 674.636)
+2025-06-04 22:38:06,962 INFO o.s.b.d.a.ConditionEvaluationDeltaLoggingListener Condition evaluation unchanged
+2025-06-04 22:38:20,442 INFO o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-06-04 22:38:20,447 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-04 22:38:20,448 INFO o.a.c.h.Http11NioProtocol Pausing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:20,450 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-04 22:38:20,450 INFO o.a.c.h.Http11NioProtocol Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:20,456 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:38:20,974 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 98300 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 22:38:20,974 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 22:38:21,116 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 22:38:21,138 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 21 ms. Found 19 JPA repository interfaces.
+2025-06-04 22:38:21,243 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 22:38:21,243 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 22:38:21,243 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:21,243 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 22:38:21,243 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 22:38:21,249 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 22:38:21,249 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 273 ms
+2025-06-04 22:38:21,955 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 22:38:21,956 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 22:38:21,959 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 22:38:22,224 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 22:38:22,389 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 22:38:22,389 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:38:22,538 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 22:38:22,758 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:38:22,759 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 22:38:22,763 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 22:38:22,852 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 1.907 seconds (process running for 690.529)
+2025-06-04 22:38:22,854 INFO o.s.b.d.a.ConditionEvaluationDeltaLoggingListener Condition evaluation unchanged
+2025-06-04 22:47:58,639 INFO o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener Restarting due to 2 class path changes (1 addition, 0 deletions, 1 modification)
+2025-06-04 22:47:58,643 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-04 22:47:58,643 INFO o.a.c.h.Http11NioProtocol Pausing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:47:58,645 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-04 22:47:58,645 INFO o.a.c.h.Http11NioProtocol Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:47:58,647 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:47:59,070 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 98300 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 22:47:59,070 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 22:47:59,202 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 22:47:59,223 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 20 ms. Found 19 JPA repository interfaces.
+2025-06-04 22:47:59,314 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 22:47:59,314 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 22:47:59,314 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:47:59,315 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 22:47:59,315 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 22:47:59,320 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 22:47:59,320 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 249 ms
+2025-06-04 22:47:59,989 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 22:47:59,993 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 22:48:00,006 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 22:48:00,243 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 22:48:00,444 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 22:48:00,444 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:48:00,587 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 22:48:00,822 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:48:00,823 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 22:48:00,828 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 22:48:00,920 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 1.873 seconds (process running for 1268.583)
+2025-06-04 22:48:00,921 INFO o.s.b.d.a.ConditionEvaluationDeltaLoggingListener Condition evaluation unchanged
+2025-06-04 22:57:27,207 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-04 22:57:27,210 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-04 22:57:27,213 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:57:32,460 INFO o.h.v.i.u.Version HV000001: Hibernate Validator 8.0.2.Final
+2025-06-04 22:57:32,481 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 8719 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-management-service)
+2025-06-04 22:57:32,482 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-04 22:57:32,498 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-04 22:57:32,498 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-04 22:57:32,868 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-04 22:57:32,949 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 76 ms. Found 19 JPA repository interfaces.
+2025-06-04 22:57:33,278 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-04 22:57:33,283 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-04 22:57:33,283 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:57:33,284 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-04 22:57:33,284 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-04 22:57:33,301 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-04 22:57:33,301 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 803 ms
+2025-06-04 22:57:34,262 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-04 22:57:34,289 INFO o.h.Version HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-06-04 22:57:34,303 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-04 22:57:34,434 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-04 22:57:34,861 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-04 22:57:35,404 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-04 22:57:35,406 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-04 22:57:35,680 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-04 22:57:35,957 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-04 22:57:35,964 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-04 22:57:35,970 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-04 22:57:36,098 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 3.854 seconds (process running for 4.895)
+2025-06-04 22:57:43,359 INFO o.a.c.c.C.[.[.[/] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-04 22:57:43,359 INFO o.s.w.s.DispatcherServlet Initializing Servlet 'dispatcherServlet'
+2025-06-04 22:57:43,435 INFO o.s.w.s.DispatcherServlet Completed initialization in 75 ms
+2025-06-04 22:57:43,477 INFO o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/v3/api-docs/**'], Ant [pattern='/v3/api-docs/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-ui.html'], Ant [pattern='/swagger-ui.html']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-resources/**'], Ant [pattern='/swagger-resources/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/configuration/**'], Ant [pattern='/configuration/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/webjars/**'], Ant [pattern='/webjars/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-04 22:57:43,558 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/public'], Ant [pattern='/public']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.

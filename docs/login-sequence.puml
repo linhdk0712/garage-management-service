@@ -1,0 +1,135 @@
+@startuml Login Sequence
+
+skin rose
+
+
+actor User
+participant "Frontend" as FE
+participant "AuthController" as AC
+participant "AuthenticationManager" as AM
+participant "CustomUserDetailsService" as CUDS
+participant "UserService" as US
+participant "JwtTokenProvider" as JWT
+participant "RefreshTokenService" as RTS
+participant "SecurityContextHolder" as SCH
+participant "Database" as DB
+
+== Login Process ==
+User -> FE: Enter credentials
+FE -> AC: POST /api/v1/auth/login
+activate AC
+
+AC -> AM: authenticate(UsernamePasswordAuthenticationToken)
+activate AM
+AM -> CUDS: loadUserByUsername(username)
+activate CUDS
+CUDS -> US: findByUsername(username)
+activate US
+US -> DB: findByUsername(username)
+activate DB
+DB --> US: Optional<User>
+deactivate DB
+US --> CUDS: Optional<UserDto>
+deactivate US
+
+alt User found
+    CUDS -> US: save(userDto) with lastLogin
+    activate US
+    US -> DB: save(user)
+    activate DB
+    DB --> US: User
+    deactivate DB
+    US --> CUDS: UserDto
+    deactivate US
+    CUDS --> AM: UserDetails
+    deactivate CUDS
+    AM --> AC: Authentication
+    deactivate AM
+else User not found
+    CUDS --> AM: throw UsernameNotFoundException
+    deactivate CUDS
+    AM --> AC: throw BadCredentialsException
+    deactivate AM
+    AC --> FE: 401 Unauthorized
+    deactivate AC
+    FE --> User: Show error message
+    return
+end
+
+AC -> SCH: setAuthentication(authentication)
+activate SCH
+SCH --> AC
+deactivate SCH
+
+AC -> JWT: generateToken(authentication)
+activate JWT
+JWT --> AC: JWT token
+deactivate JWT
+
+AC -> RTS: createRefreshToken(userId)
+activate RTS
+RTS -> DB: findById(userId)
+activate DB
+DB --> RTS: User entity
+deactivate DB
+
+RTS -> DB: findByUser(user)
+activate DB
+DB --> RTS: Optional<RefreshToken>
+deactivate DB
+
+alt Existing token found
+    RTS -> DB: delete(existingToken)
+    activate DB
+    DB --> RTS
+    deactivate DB
+end
+
+RTS -> DB: save(newRefreshToken)
+activate DB
+DB --> RTS: RefreshToken
+deactivate DB
+RTS --> AC: RefreshToken
+deactivate RTS
+
+AC --> FE: 200 OK + ResponseDataDto(JwtResponse)
+deactivate AC
+FE --> User: Show success message
+
+== Token Refresh Process ==
+User -> FE: Access token expired
+FE -> AC: POST /api/v1/auth/refresh-token
+activate AC
+
+AC -> RTS: findByToken(refreshToken)
+activate RTS
+RTS -> DB: findByToken(token)
+activate DB
+DB --> RTS: Optional<RefreshToken>
+deactivate DB
+RTS --> AC: Optional<RefreshToken>
+deactivate RTS
+
+alt Token exists
+    RTS -> RTS: verifyExpiration(refreshToken)
+    RTS -> DB: delete(token) if expired
+    activate DB
+    DB --> RTS
+    deactivate DB
+    RTS --> AC: RefreshToken
+    AC -> AC: create UserPrincipal
+    AC -> JWT: generateToken(authentication)
+    activate JWT
+    JWT --> AC: New JWT token
+    deactivate JWT
+
+    AC --> FE: 200 OK + TokenRefreshResponse
+    deactivate AC
+    FE --> User: Update access token
+else Token not found
+    AC --> FE: 401 Unauthorized + TokenRefreshException
+    deactivate AC
+    FE --> User: Redirect to login
+end
+
+@enduml 

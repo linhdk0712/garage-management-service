@@ -1,0 +1,9 @@
+2025-06-05 07:58:05,228 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 07:58:05,228 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 07:58:05,237 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 07:58:05,238 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 07:58:05,240 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 07:58:05,243 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-05 08:23:41,651 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-05 08:23:41,655 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-05 08:23:41,687 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
