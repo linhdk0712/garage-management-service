@@ -12,14 +12,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
 import vn.utc.service.dtos.*;
 import vn.utc.service.entity.RefreshToken;
 import vn.utc.service.exception.TokenRefreshException;
-import vn.utc.service.service.CustomerService;
-import vn.utc.service.service.RefreshTokenService;
-import vn.utc.service.service.RoleService;
-import vn.utc.service.service.UserService;
+import vn.utc.service.service.*;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -39,6 +37,7 @@ public class AuthController {
   private final UserService userService;
   private final RoleService roleService;
   private final CustomerService customerService;
+  private final StaffService staffService;
 
   @PostMapping(
       value = "/login",
@@ -55,6 +54,7 @@ public class AuthController {
     UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
     List<String> roles =
         userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+
     // Create refresh token
     RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
     JwtResponse jwtResponse =
@@ -64,8 +64,20 @@ public class AuthController {
             .setId(Long.valueOf(userDetails.getId()))
             .setUsername(userDetails.getUsername())
             .setEmail(userDetails.getEmail())
-            .setRoles(roles);
+            .setRoles(roles)
+            .setFirstName(userDetails.getFirstName())
+            .setLastName(userDetails.getLastName());
     ResponseDataDto responseDataDto = new ResponseDataDto();
+    // If the user is a customer, fetch their customer details
+    if (roles.contains(ContsConfig.CUSTOMER)) {
+      customerService
+              .findByCustomerId(userDetails.getId())
+              .ifPresent(customerDto ->jwtResponse.setFirstName(customerDto.firstName()).setLastName(customerDto.lastName()));
+    }else {
+      // For other roles, set first and last name to empty
+      staffService.findByUser(userDetails.getUsername())
+          .ifPresent(staffDto -> jwtResponse.setFirstName(staffDto.firstName()).setLastName(staffDto.lastName()));
+    }
     responseDataDto.setData(jwtResponse);
     return ResponseEntity.ok(responseDataDto);
   }
@@ -74,7 +86,8 @@ public class AuthController {
       value = "/refresh-token",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<TokenRefreshResponse> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
+  public ResponseEntity<TokenRefreshResponse> refreshToken(
+      @Valid @RequestBody TokenRefreshRequest request) {
     String requestRefreshToken = request.getRefreshToken();
 
     return refreshTokenService
@@ -133,7 +146,7 @@ public class AuthController {
       // Default role is RECEPTIONIST if not specified
       RoleDto roleDto =
           roleService
-              .findByName("CUSTOMER")
+              .findByName(ContsConfig.CUSTOMER)
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
       roles.add(roleDto);
     } else {

@@ -14,11 +14,11 @@ import vn.utc.service.service.CustomerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/appointments")
+@RequestMapping("/api/v1/customer/appointments")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 @Tag(name = "Vehicle", description = "Appointments management")
-public class AppointmentController {
+public class CustomerAppointmentController {
 
     private final AppointmentService appointmentService;
     private final JwtTokenProvider jwtTokenProvider;

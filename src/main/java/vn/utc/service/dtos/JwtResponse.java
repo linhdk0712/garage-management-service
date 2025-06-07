@@ -1,10 +1,12 @@
 package vn.utc.service.dtos;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtResponse {
@@ -14,19 +16,13 @@ public class JwtResponse {
     private Long id;
     private String username;
     private String email;
+    private String firstName;
+    private String lastName;
     private List<String> roles;
-
-    public String getToken() {
-        return token;
-    }
 
     public JwtResponse setToken(String token) {
         this.token = token;
         return this;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public JwtResponse setType(String type) {
@@ -34,17 +30,9 @@ public class JwtResponse {
         return this;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public JwtResponse setId(Long id) {
         this.id = id;
         return this;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public JwtResponse setUsername(String username) {
@@ -52,17 +40,9 @@ public class JwtResponse {
         return this;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public JwtResponse setEmail(String email) {
         this.email = email;
         return this;
-    }
-
-    public List<String> getRoles() {
-        return roles;
     }
 
     public JwtResponse setRoles(List<String> roles) {
@@ -70,12 +50,18 @@ public class JwtResponse {
         return this;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
     public JwtResponse setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        return this;
+    }
+
+    public JwtResponse setFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public JwtResponse setLastName(String lastName) {
+        this.lastName = lastName;
         return this;
     }
 }
