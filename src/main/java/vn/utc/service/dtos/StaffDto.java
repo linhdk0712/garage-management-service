@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/** DTO for {@link vn.utc.service.entity.Staff} */
 public record StaffDto(
     Integer id,
     @NotNull @Size(max = 50) String firstName,
@@ -16,4 +15,5 @@ public record StaffDto(
     @Size(max = 100) String specialization,
     LocalDate hireDate,
     BigDecimal hourlyRate)
-    implements Serializable {}
+    implements Serializable {
+}

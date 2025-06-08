@@ -11,7 +11,6 @@ import vn.utc.service.repo.AppointmentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +42,11 @@ public class AppointmentService {
     public List<AppointmentDto> getAllAppointments(Integer customerId) {
         return appointmentRepository.findAll().stream()
                 .filter(appointment -> appointment.getCustomer() != null && appointment.getCustomer().getId().equals(customerId))
+                .map(appointmentMapper::toDto)
+                .toList();
+    }
+    public List<AppointmentDto> getAllAppointments() {
+        return appointmentRepository.findAll().stream()
                 .map(appointmentMapper::toDto)
                 .toList();
     }

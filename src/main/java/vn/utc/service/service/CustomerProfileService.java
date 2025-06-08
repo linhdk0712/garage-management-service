@@ -1,14 +1,12 @@
 package vn.utc.service.service;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.utc.service.dtos.CustomerProfileDto;
-import vn.utc.service.entity.CustomerProfile;
 import vn.utc.service.mapper.CustomerProfileMapper;
 import vn.utc.service.repo.CustomerProfileRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
