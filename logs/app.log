@@ -1,9 +1,157 @@
-2025-06-05 07:58:05,228 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 07:58:05,228 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 07:58:05,237 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 07:58:05,238 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 07:58:05,240 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 07:58:05,243 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
-2025-06-05 08:23:41,651 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
-2025-06-05 08:23:41,655 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
-2025-06-05 08:23:41,687 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 06:13:34,616 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 06:13:34,616 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 06:13:34,625 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 06:13:34,626 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:19,762 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:19,762 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:19,769 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:19,769 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:26,340 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:26,340 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:26,346 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:26,346 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:28,853 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:28,853 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:28,860 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 19:47:28,860 ERROR v.u.s.c.JwtTokenProvider Expired JWT token
+2025-06-09 20:23:37,831 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-09 20:23:37,836 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-09 20:23:37,870 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 20:23:45,875 INFO o.h.v.i.u.Version HV000001: Hibernate Validator 8.0.2.Final
+2025-06-09 20:23:45,895 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 65917 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service)
+2025-06-09 20:23:45,896 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-09 20:23:45,911 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-09 20:23:45,911 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-09 20:23:46,292 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-09 20:23:46,374 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 78 ms. Found 21 JPA repository interfaces.
+2025-06-09 20:23:46,703 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-09 20:23:46,710 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-09 20:23:46,711 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:23:46,712 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-09 20:23:46,712 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-09 20:23:46,730 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-09 20:23:46,730 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 819 ms
+2025-06-09 20:23:47,506 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-09 20:23:47,530 INFO o.h.Version HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-06-09 20:23:47,544 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-09 20:23:47,655 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-09 20:23:47,948 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-09 20:23:48,494 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-09 20:23:48,495 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 20:23:48,771 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-09 20:23:49,070 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:23:49,078 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-09 20:23:49,084 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-09 20:23:49,212 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 3.537 seconds (process running for 4.73)
+2025-06-09 20:24:00,376 INFO o.a.c.c.C.[.[.[/] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-09 20:24:00,377 INFO o.s.w.s.DispatcherServlet Initializing Servlet 'dispatcherServlet'
+2025-06-09 20:24:00,459 INFO o.s.w.s.DispatcherServlet Completed initialization in 82 ms
+2025-06-09 20:24:00,490 INFO o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/v3/api-docs/**'], Ant [pattern='/v3/api-docs/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-ui.html'], Ant [pattern='/swagger-ui.html']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-resources/**'], Ant [pattern='/swagger-resources/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/configuration/**'], Ant [pattern='/configuration/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/webjars/**'], Ant [pattern='/webjars/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:24:00,575 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/public'], Ant [pattern='/public']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:29,826 INFO o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-06-09 20:31:29,830 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-09 20:31:29,830 INFO o.a.c.h.Http11NioProtocol Pausing ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:31:29,831 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-09 20:31:29,832 INFO o.a.c.h.Http11NioProtocol Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:31:29,854 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 20:31:30,180 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 65917 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service)
+2025-06-09 20:31:30,180 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-09 20:31:30,306 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-09 20:31:30,327 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 20 ms. Found 21 JPA repository interfaces.
+2025-06-09 20:31:30,450 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-09 20:31:30,450 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-09 20:31:30,450 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:31:30,450 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-09 20:31:30,450 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-09 20:31:30,456 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-09 20:31:30,456 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 275 ms
+2025-06-09 20:31:31,048 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-09 20:31:31,050 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-09 20:31:31,058 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-09 20:31:31,266 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-09 20:31:31,416 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-09 20:31:31,416 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 20:31:31,551 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-09 20:31:31,771 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-09 20:31:31,772 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-09 20:31:31,776 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-09 20:31:31,866 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 1.701 seconds (process running for 467.391)
+2025-06-09 20:31:31,868 INFO o.s.b.d.a.ConditionEvaluationDeltaLoggingListener Condition evaluation unchanged
+2025-06-09 20:31:46,652 INFO o.a.c.c.C.[.[.[/] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-09 20:31:46,653 INFO o.s.w.s.DispatcherServlet Initializing Servlet 'dispatcherServlet'
+2025-06-09 20:31:46,737 INFO o.s.w.s.DispatcherServlet Completed initialization in 84 ms
+2025-06-09 20:31:46,755 INFO o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/v3/api-docs/**'], Ant [pattern='/v3/api-docs/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-ui.html'], Ant [pattern='/swagger-ui.html']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-resources/**'], Ant [pattern='/swagger-resources/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/configuration/**'], Ant [pattern='/configuration/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/webjars/**'], Ant [pattern='/webjars/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 20:31:46,802 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/public'], Ant [pattern='/public']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:21:57,465 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-09 21:21:57,469 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-09 21:21:57,479 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 21:22:00,369 INFO o.h.v.i.u.Version HV000001: Hibernate Validator 8.0.2.Final
+2025-06-09 21:22:00,390 INFO v.u.s.GarageManagementServiceApplication Starting GarageManagementServiceApplication using Java 17.0.12 with PID 87790 (/Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service/build/classes/java/main started by linhdk1 in /Users/linhdk1/Documents/utc-tot-nghiep/garage-service/garage-management-service)
+2025-06-09 21:22:00,390 INFO v.u.s.GarageManagementServiceApplication No active profile set, falling back to 1 default profile: "default"
+2025-06-09 21:22:00,407 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-09 21:22:00,407 INFO o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-09 21:22:00,797 INFO o.s.d.r.c.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-09 21:22:00,877 INFO o.s.d.r.c.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 76 ms. Found 21 JPA repository interfaces.
+2025-06-09 21:22:01,212 INFO o.s.b.w.e.t.TomcatWebServer Tomcat initialized with port 8080 (http)
+2025-06-09 21:22:01,218 INFO o.a.c.h.Http11NioProtocol The ["http-nio-8080"] connector has been configured to support HTTP upgrade to [h2c]
+2025-06-09 21:22:01,218 INFO o.a.c.h.Http11NioProtocol Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-09 21:22:01,218 INFO o.a.c.c.StandardService Starting service [Tomcat]
+2025-06-09 21:22:01,218 INFO o.a.c.c.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-06-09 21:22:01,236 INFO o.a.c.c.C.[.[.[/] Initializing Spring embedded WebApplicationContext
+2025-06-09 21:22:01,236 INFO o.s.b.w.s.c.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 829 ms
+2025-06-09 21:22:02,033 INFO o.h.j.i.u.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-09 21:22:02,060 INFO o.h.Version HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-06-09 21:22:02,073 INFO o.h.c.i.RegionFactoryInitiator HHH000026: Second-level cache disabled
+2025-06-09 21:22:02,185 INFO o.s.o.j.p.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-09 21:22:02,449 INFO o.h.o.c.pooling HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-09 21:22:03,002 INFO o.h.e.t.j.p.i.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-09 21:22:03,004 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-09 21:22:03,282 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-09 21:22:03,584 INFO o.a.c.h.Http11NioProtocol Starting ProtocolHandler ["http-nio-8080"]
+2025-06-09 21:22:03,591 INFO o.s.b.w.e.t.TomcatWebServer Tomcat started on port 8080 (http) with context path '/'
+2025-06-09 21:22:03,597 INFO o.s.b.d.a.OptionalLiveReloadServer LiveReload server is running on port 35729
+2025-06-09 21:22:03,733 INFO v.u.s.GarageManagementServiceApplication Started GarageManagementServiceApplication in 3.582 seconds (process running for 4.741)
+2025-06-09 21:22:29,271 INFO o.a.c.c.C.[.[.[/] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-09 21:22:29,271 INFO o.s.w.s.DispatcherServlet Initializing Servlet 'dispatcherServlet'
+2025-06-09 21:22:29,336 INFO o.s.w.s.DispatcherServlet Completed initialization in 65 ms
+2025-06-09 21:22:29,365 INFO o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/v3/api-docs/**'], Ant [pattern='/v3/api-docs/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-ui.html'], Ant [pattern='/swagger-ui.html']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/swagger-resources/**'], Ant [pattern='/swagger-resources/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/configuration/**'], Ant [pattern='/configuration/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/webjars/**'], Ant [pattern='/webjars/**']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:22:29,440 WARN o.s.s.c.a.w.b.WebSecurity You are asking Spring Security to ignore Deferred [Mvc [pattern='/public'], Ant [pattern='/public']]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-06-09 21:43:51,614 INFO o.s.b.w.e.t.GracefulShutdown Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-09 21:43:51,618 INFO o.s.b.w.e.t.GracefulShutdown Graceful shutdown complete
+2025-06-09 21:43:51,640 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
