@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
 import vn.utc.service.dtos.*;
-import vn.utc.service.service.AppointmentService;
-import vn.utc.service.service.StaffProfileService;
-import vn.utc.service.service.StaffService;
+import vn.utc.service.service.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +23,8 @@ public class ManagerController {
     private final StaffProfileService staffProfileService;
     private final AppointmentService appointmentService;
     private final StaffService staffService;
+    private final CustomerService customerService;
+    private final VehicleService vehicleService;
 
 
 
@@ -63,7 +63,7 @@ public class ManagerController {
         responseDataDto.setData(appointmentDtoList); // Replace with actual appointment data
         return ResponseEntity.ok(responseDataDto);
     }
-    @GetMapping(value = "/staffs", produces = "application/json")
+    @GetMapping(value = "/staff", produces = "application/json")
     public ResponseEntity<ResponseDataDto> getStaffs(HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
@@ -76,4 +76,31 @@ public class ManagerController {
         responseDataDto.setData(staffProfileDtos); // Replace with actual staff data
         return ResponseEntity.ok(responseDataDto);
     }
+    @GetMapping(value = "/customers", produces = "application/json")
+    public ResponseEntity<ResponseDataDto> getCustomer(HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+        List<CustomerDto> customerDtoList =  customerService.findAllCustomers();
+        responseDataDto.setData(customerDtoList); // Replace with actual staff data
+        return ResponseEntity.ok(responseDataDto);
+    }
+    @GetMapping(value = "/vehicles", produces = "application/json")
+    public ResponseEntity<ResponseDataDto> getVehicles(HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+        List<VehicleDto> vehicleDtoList = vehicleService.getAllVehicles();
+        responseDataDto.setData(vehicleDtoList); // Replace with actual staff data
+        return ResponseEntity.ok(responseDataDto);
+    }
+
 }

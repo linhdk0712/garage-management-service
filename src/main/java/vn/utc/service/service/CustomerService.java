@@ -11,6 +11,7 @@ import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.CustomerRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,6 +39,12 @@ public class CustomerService {
         }
         Customer customer = customerRepository.findCustomerByUser(userMapper.toEntity(userDto)).orElse(null);
         return Optional.ofNullable(customerMapper.toDto(customer));
+    }
+    public List<CustomerDto> findAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
 
 

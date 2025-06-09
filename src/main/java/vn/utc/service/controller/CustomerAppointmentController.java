@@ -14,7 +14,7 @@ import vn.utc.service.service.CustomerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customer/appointments")
+@RequestMapping("/api/v1/customers/appointments")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 @Tag(name = "Vehicle", description = "Appointments management")
