@@ -10,7 +10,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
-/** Mapping for DB view */
+/**
+ * Entity mapping for database view 'customer_profile'.
+ * This is a read-only view that combines customer and user information.
+ * 
+ * Note: This entity is marked as @Immutable because it maps to a database view,
+ * not a table. Hibernate should not attempt to create, update, or drop this entity.
+ */
 @Getter
 @Setter
 @Entity

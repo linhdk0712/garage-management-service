@@ -15,7 +15,7 @@ spring:
       auto-commit: true
       pool-name: HikariPool
   main:
-    lazy-initialization: true
+    lazy-initialization: false
 app:
   jwt:
     secret: ${JWT_SECRET:EhWw6CTgMWwCLNRDy6LmU2cpsrLVobTVID9HE3Oe+sVoWO21kxt1YE6xGFmV7oAB5Qzlf+SarhBSAoKLgihIpg==}
@@ -28,3 +28,4 @@ server:
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
   http2:
     enabled: true
+

@@ -15,13 +15,15 @@ import vn.utc.service.dtos.AppointmentDto;
 import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.entity.Appointment;
 import vn.utc.service.entity.Customer;
-import vn.utc.service.entity.Vehicle;
+import vn.utc.service.entity.User;
 import vn.utc.service.mapper.AppointmentMapper;
 import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.repo.AppointmentRepository;
 import vn.utc.service.repo.VehicleRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -341,10 +343,15 @@ class AppointmentServiceTest {
         String to = "2024-12-31";
         String date = "2024-06-15";
         
+        // Convert string dates to Instant for mocking
+        Instant fromInstant = LocalDate.parse(from).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant toInstant = LocalDate.parse(to).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant dateInstant = LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        
         Page<Appointment> appointmentPage = new PageImpl<>(List.of(appointment), pageable, 1);
         Page<AppointmentDto> expectedPage = new PageImpl<>(List.of(appointmentDto), pageable, 1);
 
-        when(appointmentRepository.findByCustomerAndFilters(1, status, from, to, date, pageable))
+        when(appointmentRepository.findByCustomerAndFilters(1, status, fromInstant, toInstant, dateInstant, pageable))
                 .thenReturn(appointmentPage);
         when(appointmentMapper.toDto(appointment)).thenReturn(appointmentDto);
 
@@ -354,7 +361,7 @@ class AppointmentServiceTest {
         // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).hasSize(1);
-        verify(appointmentRepository).findByCustomerAndFilters(1, status, from, to, date, pageable);
+        verify(appointmentRepository).findByCustomerAndFilters(1, status, fromInstant, toInstant, dateInstant, pageable);
         verify(appointmentMapper).toDto(appointment);
     }
 
@@ -389,10 +396,15 @@ class AppointmentServiceTest {
         String to = "2024-12-31";
         String date = "2024-06-15";
         
+        // Convert string dates to Instant for mocking
+        Instant fromInstant = LocalDate.parse(from).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant toInstant = LocalDate.parse(to).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant dateInstant = LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        
         Page<Appointment> appointmentPage = new PageImpl<>(List.of(appointment), pageable, 1);
         Page<AppointmentDto> expectedPage = new PageImpl<>(List.of(appointmentDto), pageable, 1);
 
-        when(appointmentRepository.findByFilters(status, from, to, date, pageable))
+        when(appointmentRepository.findByFilters(status, fromInstant, toInstant, dateInstant, pageable))
                 .thenReturn(appointmentPage);
         when(appointmentMapper.toDto(appointment)).thenReturn(appointmentDto);
 
@@ -402,7 +414,7 @@ class AppointmentServiceTest {
         // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).hasSize(1);
-        verify(appointmentRepository).findByFilters(status, from, to, date, pageable);
+        verify(appointmentRepository).findByFilters(status, fromInstant, toInstant, dateInstant, pageable);
         verify(appointmentMapper).toDto(appointment);
     }
 

@@ -31,13 +31,13 @@ import java.util.Set;
 @Tag(name = "Authentication", description = "Authenticate customer,user")
 public class AuthController {
   private final AuthenticationManager authenticationManager;
-  private final PasswordEncoder passwordEncoder;
+  private final UserService userService;
   private final JwtTokenProvider tokenProvider;
   private final RefreshTokenService refreshTokenService;
-  private final UserService userService;
-  private final RoleService roleService;
+
   private final CustomerService customerService;
   private final StaffService staffService;
+  private final AuthService authService;
 
   @PostMapping(
       value = "/login",
@@ -129,7 +129,6 @@ public class AuthController {
   public ResponseEntity<ResponseDataDto> registerUser(
       @Valid @RequestBody RegisterRequest signUpRequest) {
     ResponseDataDto responseDataDto = new ResponseDataDto();
-    // Check if username is already taken
     if (Boolean.TRUE.equals(userService.existsByUsername(signUpRequest.username()))) {
       responseDataDto.setData("Error: Username is already taken!");
       return ResponseEntity.badRequest().body(responseDataDto);
@@ -139,52 +138,7 @@ public class AuthController {
       responseDataDto.setData("Error: Email is already in use!");
       return ResponseEntity.badRequest().body(responseDataDto);
     }
-
-    Set<String> strRoles = signUpRequest.roles();
-    Set<RoleDto> roles = new HashSet<>();
-    if (strRoles == null || strRoles.isEmpty()) {
-      // Default role is RECEPTIONIST if not specified
-      RoleDto roleDto =
-          roleService
-              .findByName(ContsConfig.CUSTOMER)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(roleDto);
-    } else {
-      strRoles.forEach(
-          role -> {
-            RoleDto userRole =
-                roleService
-                    .findByName(role)
-                    .orElseThrow(
-                        () -> new RuntimeException("Error: Role " + role + " is not found."));
-            roles.add(userRole);
-          });
-    }
-    // Create new user's account
-    UserDto userDto =
-        new UserDto()
-            .setUsername(signUpRequest.username())
-            .setEmail(signUpRequest.email())
-            .setPassword(passwordEncoder.encode(signUpRequest.password()))
-            .setPhone(signUpRequest.phone())
-            .setRole(String.valueOf(roles.iterator().next().name()))
-            .setActive(true)
-            .setCreatedAt(Instant.now());
-    userDto.setRoles(roles);
-    userDto = userService.save(userDto);
-
-    CustomerRegister customerRegister =
-        new CustomerRegister()
-            .setAddress(signUpRequest.address())
-            .setCity(signUpRequest.city())
-            .setFirstName(signUpRequest.firstName())
-            .setLastName(signUpRequest.lastName())
-            .setNotes("")
-            .setPreferredContactMethod(signUpRequest.preferredContactMethod())
-            .setState(signUpRequest.state())
-            .setZipCode(signUpRequest.zipCode())
-            .setUser(userDto);
-    CustomerDto customerDto = customerService.saveCustomer(customerRegister);
+    CustomerDto customerDto = authService.registerCustomer(signUpRequest);
     responseDataDto.setData(customerDto);
     return ResponseEntity.ok(responseDataDto);
   }

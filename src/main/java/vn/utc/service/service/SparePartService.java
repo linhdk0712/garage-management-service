@@ -10,7 +10,6 @@ import vn.utc.service.repo.SparePartRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +22,7 @@ public class SparePartService {
      * @return List of spare parts with low stock
      */
     public List<SparePart> findLowStockItems() {
-        List<SparePart> allParts = sparePartRepository.findAll();
-        
-        // If no parts in database, return mock data for testing
-        if (allParts.isEmpty()) {
-            return createMockLowStockItems();
-        }
-        
-        return allParts.stream()
+        return sparePartRepository.findAll().stream()
                 .filter(part -> part.getQuantityInStock() <= part.getMinimumStockLevel())
                 .toList();
     }
@@ -42,13 +34,6 @@ public class SparePartService {
      */
     public Page<SparePart> findLowStockItems(Pageable pageable) {
         List<SparePart> allParts = sparePartRepository.findAll();
-        
-        // If no parts in database, return mock data for testing
-        if (allParts.isEmpty()) {
-            List<SparePart> mockLowStockItems = createMockLowStockItems();
-            return new PageImpl<>(mockLowStockItems, pageable, mockLowStockItems.size());
-        }
-        
         List<SparePart> lowStockItems = allParts.stream()
                 .filter(part -> part.getQuantityInStock() <= part.getMinimumStockLevel())
                 .toList();
@@ -57,60 +42,10 @@ public class SparePartService {
         int end = Math.min((start + pageable.getPageSize()), lowStockItems.size());
         
         if (start > lowStockItems.size()) {
-            return new PageImpl<>(new ArrayList<>(), pageable, lowStockItems.size());
+            return new PageImpl<>(List.of(), pageable, lowStockItems.size());
         }
         
         return new PageImpl<>(lowStockItems.subList(start, end), pageable, lowStockItems.size());
-    }
-    
-    /**
-     * Create mock low stock items for testing
-     * @return List of mock spare parts with low stock
-     */
-    private List<SparePart> createMockLowStockItems() {
-        SparePart part1 = new SparePart()
-                .setId(1)
-                .setName("Oil Filter")
-                .setDescription("High-quality oil filter for engine protection")
-                .setCategory("Filters")
-                .setPrice(new java.math.BigDecimal("15.99"))
-                .setCost(new java.math.BigDecimal("8.50"))
-                .setQuantityInStock(2)
-                .setMinimumStockLevel(5)
-                .setLocation("A1-B2")
-                .setSupplier("AutoParts Co.")
-                .setCreatedAt(java.time.Instant.now())
-                .setUpdatedAt(java.time.Instant.now());
-                
-        SparePart part2 = new SparePart()
-                .setId(2)
-                .setName("Brake Pads")
-                .setDescription("Ceramic brake pads for optimal stopping power")
-                .setCategory("Brakes")
-                .setPrice(new java.math.BigDecimal("45.99"))
-                .setCost(new java.math.BigDecimal("25.00"))
-                .setQuantityInStock(1)
-                .setMinimumStockLevel(3)
-                .setLocation("C3-D4")
-                .setSupplier("BrakeTech Inc.")
-                .setCreatedAt(java.time.Instant.now())
-                .setUpdatedAt(java.time.Instant.now());
-                
-        SparePart part3 = new SparePart()
-                .setId(3)
-                .setName("Air Filter")
-                .setDescription("Premium air filter for better engine performance")
-                .setCategory("Filters")
-                .setPrice(new java.math.BigDecimal("12.99"))
-                .setCost(new java.math.BigDecimal("6.50"))
-                .setQuantityInStock(0)
-                .setMinimumStockLevel(4)
-                .setLocation("E5-F6")
-                .setSupplier("FilterPro Ltd.")
-                .setCreatedAt(java.time.Instant.now())
-                .setUpdatedAt(java.time.Instant.now());
-                
-        return List.of(part1, part2, part3);
     }
     
     /**
@@ -127,14 +62,7 @@ public class SparePartService {
      * @return List of all spare parts
      */
     public List<SparePart> findAll() {
-        List<SparePart> allParts = sparePartRepository.findAll();
-        
-        // If no parts in database, return mock data for testing
-        if (allParts.isEmpty()) {
-            return createMockParts();
-        }
-        
-        return allParts;
+        return sparePartRepository.findAll();
     }
     
     /**
@@ -143,14 +71,6 @@ public class SparePartService {
      * @return Page of all spare parts
      */
     public Page<SparePart> findAll(Pageable pageable) {
-        List<SparePart> allParts = sparePartRepository.findAll();
-        
-        // If no parts in database, return mock data for testing
-        if (allParts.isEmpty()) {
-            List<SparePart> mockParts = createMockParts();
-            return new PageImpl<>(mockParts, pageable, mockParts.size());
-        }
-        
         return sparePartRepository.findAll(pageable);
     }
     
@@ -164,12 +84,6 @@ public class SparePartService {
      */
     public Page<SparePart> findAll(Pageable pageable, String category, String search, String stockStatus) {
         List<SparePart> allParts = sparePartRepository.findAll();
-        
-        // If no parts in database, return mock data for testing
-        if (allParts.isEmpty()) {
-            List<SparePart> mockParts = createMockParts();
-            return new PageImpl<>(mockParts, pageable, mockParts.size());
-        }
         
         // Apply filters
         List<SparePart> filteredParts = allParts.stream()
@@ -187,55 +101,10 @@ public class SparePartService {
         int end = Math.min((start + pageable.getPageSize()), filteredParts.size());
         
         if (start > filteredParts.size()) {
-            return new PageImpl<>(new ArrayList<>(), pageable, filteredParts.size());
+            return new PageImpl<>(List.of(), pageable, filteredParts.size());
         }
         
         return new PageImpl<>(filteredParts.subList(start, end), pageable, filteredParts.size());
-    }
-    
-    /**
-     * Create mock spare parts for testing
-     * @return List of mock spare parts
-     */
-    private List<SparePart> createMockParts() {
-        List<SparePart> mockParts = new ArrayList<>();
-        
-        // Add the low stock items
-        mockParts.addAll(createMockLowStockItems());
-        
-        // Add some normal stock items
-        SparePart part4 = new SparePart()
-                .setId(4)
-                .setName("Spark Plugs")
-                .setDescription("Iridium spark plugs for better ignition")
-                .setCategory("Ignition")
-                .setPrice(new java.math.BigDecimal("8.99"))
-                .setCost(new java.math.BigDecimal("4.50"))
-                .setQuantityInStock(15)
-                .setMinimumStockLevel(5)
-                .setLocation("G7-H8")
-                .setSupplier("SparkTech Corp.")
-                .setCreatedAt(java.time.Instant.now())
-                .setUpdatedAt(java.time.Instant.now());
-                
-        SparePart part5 = new SparePart()
-                .setId(5)
-                .setName("Windshield Wipers")
-                .setDescription("Premium windshield wiper blades")
-                .setCategory("Exterior")
-                .setPrice(new java.math.BigDecimal("22.99"))
-                .setCost(new java.math.BigDecimal("12.00"))
-                .setQuantityInStock(8)
-                .setMinimumStockLevel(3)
-                .setLocation("I9-J10")
-                .setSupplier("WiperPro Inc.")
-                .setCreatedAt(java.time.Instant.now())
-                .setUpdatedAt(java.time.Instant.now());
-                
-        mockParts.add(part4);
-        mockParts.add(part5);
-        
-        return mockParts;
     }
     
     /**

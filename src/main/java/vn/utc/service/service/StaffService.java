@@ -14,6 +14,7 @@ import vn.utc.service.entity.Staff;
 import vn.utc.service.mapper.StaffMapper;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.StaffRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ public class StaffService {
         return staffRepository.findAll(pageable)
                 .map(staffMapper::toDto);
     }
+    @Transactional
     public Optional<StaffDto> createStaff(StaffRequest registerRequest) {
         Set<RoleDto> roles = new HashSet<>();
         RoleDto roleDto =
@@ -80,5 +82,48 @@ public class StaffService {
 
         Staff staff1 = staffRepository.save(staff);
         return Optional.of(staffMapper.toDto(staff1));
+    }
+    @Transactional
+    public void createAdminAndManager(StaffRequest registerRequest,String role) {
+        Set<RoleDto> roles = new HashSet<>();
+        RoleDto roleDto =
+                roleService
+                        .findByName(role)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        roles.add(roleDto);
+        // Create new user's account
+        UserDto userDto =
+                new UserDto()
+                        .setUsername(registerRequest.username())
+                        .setEmail(registerRequest.email())
+                        .setPassword(passwordEncoder.encode(registerRequest.password()))
+                        .setPhone(registerRequest.phone())
+                        .setRole(String.valueOf(roles.iterator().next().name()))
+                        .setActive(true)
+                        .setCreatedAt(Instant.now());
+        userDto.setRoles(roles);
+        userDto = userService.save(userDto);
+
+        Staff staff = new Staff();
+        staff.setUser(userMapper.toEntity(userDto));
+        staff.setFirstName(registerRequest.firstName());
+        staff.setLastName(registerRequest.lastName());
+        staff.setHourlyRate(registerRequest.hourlyRate());
+        staff.setHireDate(registerRequest.hireDate());
+        staff.setPosition(registerRequest.position());
+        staff.setSpecialization(registerRequest.specialization());
+
+
+        staffRepository.save(staff);
+    }
+
+    /**
+     * Save multiple staff members for data initialization purposes
+     * @param staffList List of Staff entities to save
+     * @return List of saved Staff entities
+     */
+    @Transactional
+    public List<Staff> saveAllForInitialization(List<Staff> staffList) {
+        return staffRepository.saveAll(staffList);
     }
 }

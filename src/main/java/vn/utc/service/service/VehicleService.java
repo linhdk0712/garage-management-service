@@ -138,4 +138,23 @@ public class VehicleService {
     }
     vehicleRepository.deleteById(id);
   }
+
+  /**
+   * Save multiple vehicles for data initialization purposes
+   * @param vehicles List of Vehicle entities to save
+   * @return List of saved Vehicle entities
+   */
+  @Transactional
+  public List<Vehicle> saveAllForInitialization(List<Vehicle> vehicles) {
+    return vehicleRepository.saveAll(vehicles);
+  }
+
+  /**
+   * Find vehicles by customer ID for data initialization purposes
+   * @param customerId The customer ID to search for
+   * @return List of Vehicle entities
+   */
+  public List<Vehicle> findVehiclesByCustomerIdForInitialization(Integer customerId) {
+    return vehicleRepository.findVehiclesByCustomerId(customerId);
+  }
 }

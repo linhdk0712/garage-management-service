@@ -9,14 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.AppointmentDto;
 import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.entity.Appointment;
-import vn.utc.service.entity.Vehicle;
-import vn.utc.service.exception.VehicleNotFoundException;
 import vn.utc.service.mapper.AppointmentMapper;
 import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.repo.AppointmentRepository;
-import vn.utc.service.repo.VehicleRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +28,6 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
     private final CustomerMapper customerMapper;
-    private final VehicleRepository vehicleRepository;
 
     public Optional<AppointmentDto> findById(Integer id) {
         return appointmentRepository.findById(id)
@@ -103,28 +104,90 @@ public class AppointmentService {
     }
 
     public Page<AppointmentDto> getAllAppointments(Integer customerId, Pageable pageable, String status, String from, String to, String date) {
-        if (status != null && !status.trim().isEmpty() || 
-            from != null && !from.trim().isEmpty() || 
-            to != null && !to.trim().isEmpty() || 
-            date != null && !date.trim().isEmpty()) {
-            return appointmentRepository.findByCustomerAndFilters(customerId, status, from, to, date, pageable)
+        // Convert String parameters to Instant
+        Instant fromInstant = parseDateString(from);
+        Instant toInstant = parseDateString(to);
+        
+        boolean hasStatus = status != null && !status.trim().isEmpty();
+        boolean hasDateRange = fromInstant != null && toInstant != null;
+        
+        if (hasStatus && hasDateRange) {
+            return appointmentRepository.findByCustomerIdAndStatusAndDateRange(customerId, status, fromInstant, toInstant, pageable)
+                    .map(appointmentMapper::toDto);
+        } else if (hasStatus) {
+            return appointmentRepository.findByCustomerIdAndStatus(customerId, status, pageable)
+                    .map(appointmentMapper::toDto);
+        } else if (hasDateRange) {
+            return appointmentRepository.findByCustomerIdAndDateRange(customerId, fromInstant, toInstant, pageable)
+                    .map(appointmentMapper::toDto);
+        } else {
+            return appointmentRepository.findByCustomerId(customerId, pageable)
                     .map(appointmentMapper::toDto);
         }
-        
-        // Fallback to existing method if no filters
-        return getAllAppointments(customerId, pageable);
     }
     
     public Page<AppointmentDto> getAllAppointments(Pageable pageable, String status, String from, String to, String date) {
-        if (status != null && !status.trim().isEmpty() || 
-            from != null && !from.trim().isEmpty() || 
-            to != null && !to.trim().isEmpty() || 
-            date != null && !date.trim().isEmpty()) {
-            return appointmentRepository.findByFilters(status, from, to, date, pageable)
+        // Convert String parameters to Instant
+        Instant fromInstant = parseDateString(from);
+        Instant toInstant = parseDateString(to);
+        
+        boolean hasStatus = status != null && !status.trim().isEmpty();
+        boolean hasDateRange = fromInstant != null && toInstant != null;
+        
+        if (hasStatus && hasDateRange) {
+            return appointmentRepository.findByStatusAndDateRange(status, fromInstant, toInstant, pageable)
+                    .map(appointmentMapper::toDto);
+        } else if (hasStatus) {
+            return appointmentRepository.findByStatus(status, pageable)
+                    .map(appointmentMapper::toDto);
+        } else if (hasDateRange) {
+            return appointmentRepository.findByDateRange(fromInstant, toInstant, pageable)
+                    .map(appointmentMapper::toDto);
+        } else {
+            return appointmentRepository.findAll(pageable)
                     .map(appointmentMapper::toDto);
         }
+    }
+    
+    /**
+     * Parse a date string to Instant. Supports multiple formats:
+     * - ISO-8601 format (2023-12-25T10:30:00Z)
+     * - Date only format (2023-12-25)
+     * - Date time format (2023-12-25T10:30:00)
+     */
+    private Instant parseDateString(String dateString) {
+        if (dateString == null || dateString.trim().isEmpty()) {
+            return null;
+        }
         
-        // Fallback to existing method if no filters
-        return getAllAppointments(pageable);
+        try {
+            // Try parsing as ISO-8601 Instant
+            return Instant.parse(dateString);
+        } catch (DateTimeParseException e1) {
+            try {
+                // Try parsing as LocalDateTime
+                LocalDateTime localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+            } catch (DateTimeParseException e2) {
+                try {
+                    // Try parsing as LocalDate (assume start of day)
+                    LocalDate localDate = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
+                    return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                } catch (DateTimeParseException e3) {
+                    // If all parsing fails, return null
+                    return null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Save multiple appointments for data initialization purposes
+     * @param appointments List of Appointment entities to save
+     * @return List of saved Appointment entities
+     */
+    @Transactional
+    public List<Appointment> saveAllForInitialization(List<Appointment> appointments) {
+        return appointmentRepository.saveAll(appointments);
     }
 }

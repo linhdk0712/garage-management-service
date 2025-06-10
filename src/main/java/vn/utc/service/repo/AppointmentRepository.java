@@ -5,32 +5,54 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import vn.utc.service.entity.Appointment;
 
 import java.time.Instant;
 
+@Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+    
+    @Query("SELECT a FROM Appointment a WHERE a.customer.id = :customerId")
+    Page<Appointment> findByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.customer.id = :customerId AND " +
+           "(:status IS NULL OR :status = '' OR LOWER(a.status) = LOWER(:status))")
+    Page<Appointment> findByCustomerIdAndStatus(@Param("customerId") Integer customerId,
+                                               @Param("status") String status,
+                                               Pageable pageable);
+    
+    @Query("SELECT a FROM Appointment a WHERE a.customer.id = :customerId AND " +
+           "a.appointmentDate >= :from AND a.appointmentDate <= :to")
+    Page<Appointment> findByCustomerIdAndDateRange(@Param("customerId") Integer customerId,
+                                                  @Param("from") Instant from,
+                                                  @Param("to") Instant to,
+                                                  Pageable pageable);
     
     @Query("SELECT a FROM Appointment a WHERE a.customer.id = :customerId AND " +
            "(:status IS NULL OR :status = '' OR LOWER(a.status) = LOWER(:status)) AND " +
-           "(:from IS NULL OR :from = '' OR a.appointmentDate >= :from) AND " +
-           "(:to IS NULL OR :to = '' OR a.appointmentDate <= :to) AND " +
-           "(:date IS NULL OR :date = '' OR DATE(a.appointmentDate) = DATE(:date))")
-    Page<Appointment> findByCustomerAndFilters(@Param("customerId") Integer customerId,
-                                             @Param("status") String status,
-                                             @Param("from") String from,
-                                             @Param("to") String to,
-                                             @Param("date") String date,
-                                             Pageable pageable);
+           "a.appointmentDate >= :from AND a.appointmentDate <= :to")
+    Page<Appointment> findByCustomerIdAndStatusAndDateRange(@Param("customerId") Integer customerId,
+                                                           @Param("status") String status,
+                                                           @Param("from") Instant from,
+                                                           @Param("to") Instant to,
+                                                           Pageable pageable);
+    
+    @Query("SELECT a FROM Appointment a WHERE " +
+           "(:status IS NULL OR :status = '' OR LOWER(a.status) = LOWER(:status))")
+    Page<Appointment> findByStatus(@Param("status") String status, Pageable pageable);
+    
+    @Query("SELECT a FROM Appointment a WHERE " +
+           "a.appointmentDate >= :from AND a.appointmentDate <= :to")
+    Page<Appointment> findByDateRange(@Param("from") Instant from,
+                                     @Param("to") Instant to,
+                                     Pageable pageable);
     
     @Query("SELECT a FROM Appointment a WHERE " +
            "(:status IS NULL OR :status = '' OR LOWER(a.status) = LOWER(:status)) AND " +
-           "(:from IS NULL OR :from = '' OR a.appointmentDate >= :from) AND " +
-           "(:to IS NULL OR :to = '' OR a.appointmentDate <= :to) AND " +
-           "(:date IS NULL OR :date = '' OR DATE(a.appointmentDate) = DATE(:date))")
-    Page<Appointment> findByFilters(@Param("status") String status,
-                                   @Param("from") String from,
-                                   @Param("to") String to,
-                                   @Param("date") String date,
-                                   Pageable pageable);
+           "a.appointmentDate >= :from AND a.appointmentDate <= :to")
+    Page<Appointment> findByStatusAndDateRange(@Param("status") String status,
+                                              @Param("from") Instant from,
+                                              @Param("to") Instant to,
+                                              Pageable pageable);
 }

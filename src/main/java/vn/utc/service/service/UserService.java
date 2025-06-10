@@ -8,6 +8,7 @@ import vn.utc.service.entity.User;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +43,24 @@ public class UserService {
   public Optional<UserDto> findById(int id) {
     User user = userRepository.findById(id).orElse(null);
     return Optional.ofNullable(userMapper.toDto(user));
+  }
+
+  /**
+   * Save multiple users for data initialization purposes
+   * @param users List of User entities to save
+   * @return List of saved User entities
+   */
+  @Transactional
+  public List<User> saveAllForInitialization(List<User> users) {
+    return userRepository.saveAll(users);
+  }
+
+  /**
+   * Find user by username for data initialization purposes
+   * @param username The username to search for
+   * @return Optional containing the User entity if found
+   */
+  public Optional<User> findByUsernameForInitialization(String username) {
+    return userRepository.findByUsername(username);
   }
 }

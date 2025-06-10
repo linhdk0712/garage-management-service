@@ -12,6 +12,7 @@ import vn.utc.service.entity.User;
 import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.CustomerRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,4 +64,22 @@ public class CustomerService {
                 .map(customerMapper::toDto);
     }
 
+    /**
+     * Save multiple customers for data initialization purposes
+     * @param customers List of Customer entities to save
+     * @return List of saved Customer entities
+     */
+    @Transactional
+    public List<Customer> saveAllForInitialization(List<Customer> customers) {
+        return customerRepository.saveAll(customers);
+    }
+
+    /**
+     * Find customer by user for data initialization purposes
+     * @param user The user to search for
+     * @return Optional containing the Customer entity if found
+     */
+    public Optional<Customer> findCustomerByUserForInitialization(User user) {
+        return customerRepository.findCustomerByUser(user);
+    }
 }

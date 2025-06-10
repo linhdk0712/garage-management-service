@@ -5,10 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import vn.utc.service.entity.CustomerProfile;
 
 import java.util.Optional;
 
+@Repository
 public interface CustomerProfileRepository extends JpaRepository<CustomerProfile, Integer> {
     Optional<CustomerProfile> findCustomerProfileByUserId(Integer id);
     Optional<CustomerProfile> findCustomerProfileByUsername(String username);

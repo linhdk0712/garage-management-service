@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
 
 public record StaffRequest(String username,
                            String email,
@@ -21,4 +20,5 @@ public record StaffRequest(String username,
                            @Size(max = 50) String position,
                            @Size(max = 100) String specialization,
                            LocalDate hireDate,
-                           BigDecimal hourlyRate) implements Serializable {}
+                           BigDecimal hourlyRate) implements Serializable {
+}
