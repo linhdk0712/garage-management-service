@@ -3,10 +3,15 @@ package vn.utc.service.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
+import vn.utc.service.dtos.PaginatedResponseDto;
 import vn.utc.service.dtos.ResponseDataDto;
 import vn.utc.service.entity.SparePart;
 import vn.utc.service.service.SparePartService;
@@ -28,7 +33,15 @@ public class InventoryController {
      * Get all spare parts
      */
     @GetMapping(value = "/parts", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getAllParts(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getAllParts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String stockStatus,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -38,8 +51,19 @@ public class InventoryController {
         }
         
         try {
-            List<SparePart> parts = sparePartService.findAll();
-            responseDataDto.setData(parts);
+            Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+                Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            
+            Page<SparePart> partsPage = sparePartService.findAll(pageable, category, search, stockStatus);
+            PaginatedResponseDto<SparePart> paginatedResponse = PaginatedResponseDto.of(
+                partsPage.getContent(),
+                partsPage.getNumber(),
+                partsPage.getSize(),
+                partsPage.getTotalElements()
+            );
+            
+            responseDataDto.setData(paginatedResponse);
             return ResponseEntity.ok(responseDataDto);
         } catch (Exception e) {
             responseDataDto.setErrorMessage("Error fetching parts: " + e.getMessage());
@@ -84,7 +108,12 @@ public class InventoryController {
      * Get low stock items
      */
     @GetMapping(value = "/low-stock", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getLowStockItems(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getLowStockItems(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -94,8 +123,19 @@ public class InventoryController {
         }
         
         try {
-            List<SparePart> lowStockItems = sparePartService.findLowStockItems();
-            responseDataDto.setData(lowStockItems);
+            Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+                Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            
+            Page<SparePart> lowStockPage = sparePartService.findLowStockItems(pageable);
+            PaginatedResponseDto<SparePart> paginatedResponse = PaginatedResponseDto.of(
+                lowStockPage.getContent(),
+                lowStockPage.getNumber(),
+                lowStockPage.getSize(),
+                lowStockPage.getTotalElements()
+            );
+            
+            responseDataDto.setData(paginatedResponse);
             return ResponseEntity.ok(responseDataDto);
         } catch (Exception e) {
             responseDataDto.setErrorMessage("Error fetching low stock items: " + e.getMessage());

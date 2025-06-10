@@ -2,6 +2,8 @@ package vn.utc.service.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.CustomerDto;
@@ -40,6 +42,23 @@ public class VehicleService {
     return vehicleDtos;
   }
 
+  public Page<VehicleDto> getAllVehicles(Pageable pageable) {
+    return vehicleRepository.findAll(pageable)
+        .map(vehicleMapper::toDto);
+  }
+
+  public Page<VehicleDto> getAllVehicles(Pageable pageable, String search, String make, String model, Integer year, Integer customerId) {
+    if (search != null && !search.trim().isEmpty() || 
+        make != null && !make.trim().isEmpty() || 
+        model != null && !model.trim().isEmpty() || 
+        year != null || customerId != null) {
+      return vehicleRepository.findByFilters(search, make, model, year, customerId, pageable)
+          .map(vehicleMapper::toDto);
+    }
+    return vehicleRepository.findAll(pageable)
+        .map(vehicleMapper::toDto);
+  }
+
   public List<VehicleDto> getVehiclesByCustomerId(int id) {
     List<Vehicle> vehicles = vehicleRepository.findVehiclesByCustomerId(id);
     List<VehicleDto> vehicleDtos = new ArrayList<>();
@@ -49,6 +68,11 @@ public class VehicleService {
           vehicleDtos.add(vehicleDto);
         });
     return vehicleDtos;
+  }
+
+  public Page<VehicleDto> getVehiclesByCustomerId(int id, Pageable pageable) {
+    return vehicleRepository.findVehiclesByCustomerId(id, pageable)
+        .map(vehicleMapper::toDto);
   }
 
   public Optional<VehicleDto> getVehicleById(Integer id) {
@@ -70,6 +94,21 @@ public class VehicleService {
     if (customerDto == null) {
       throw new CustomerNotFoundException("Customer not found");
     }
+    
+    // Validate vehicle data
+    if (vehicle.make() == null || vehicle.make().trim().isEmpty()) {
+      throw new IllegalArgumentException("Vehicle make is required");
+    }
+    if (vehicle.model() == null || vehicle.model().trim().isEmpty()) {
+      throw new IllegalArgumentException("Vehicle model is required");
+    }
+    if (vehicle.year() == null || vehicle.year() < 1900 || vehicle.year() > (java.time.Year.now().getValue() + 1)) {
+      throw new IllegalArgumentException("Invalid vehicle year");
+    }
+    if (vehicle.licensePlate() == null || vehicle.licensePlate().trim().isEmpty()) {
+      throw new IllegalArgumentException("License plate is required");
+    }
+    
     Vehicle vehicleEntity = vehicleMapper.toEntity(vehicle);
     vehicleEntity.setCustomer(customerMapper.toEntity(customerDto));
     return vehicleMapper.toDto(vehicleRepository.save(vehicleEntity));
@@ -79,6 +118,14 @@ public class VehicleService {
     Optional<Vehicle> vehicle = vehicleRepository.findById(id);
     if (vehicle.isPresent()) {
       Vehicle vehicleEntity = vehicle.get();
+      
+      // Check if license plate is being changed and if it already exists
+      if (!vehicleEntity.getLicensePlate().equals(vehicleDto.licensePlate()) && 
+          vehicleRepository.existsByLicensePlate(vehicleDto.licensePlate())) {
+        throw new VehicleNotFoundException(
+            "Vehicle with license plate " + vehicleDto.licensePlate() + " already exists");
+      }
+      
       vehicleEntity = vehicleMapper.partialUpdate(vehicleDto, vehicleEntity);
       return Optional.of(vehicleMapper.toDto(vehicleRepository.save(vehicleEntity)));
     }
@@ -86,6 +133,9 @@ public class VehicleService {
   }
 
   public void deleteVehicle(Integer id) {
+    if (!vehicleRepository.existsById(id)) {
+      throw new VehicleNotFoundException("Vehicle with ID " + id + " not found");
+    }
     vehicleRepository.deleteById(id);
   }
 }

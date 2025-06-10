@@ -1,6 +1,8 @@
 package vn.utc.service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.utc.service.config.ContsConfig;
@@ -41,6 +43,10 @@ public class StaffService {
         return Optional.of(staffRepository.findAll().stream()
                 .map(staffMapper::toDto)
                 .toList());
+    }
+    public Page<StaffDto> findAll(Pageable pageable) {
+        return staffRepository.findAll(pageable)
+                .map(staffMapper::toDto);
     }
     public Optional<StaffDto> createStaff(StaffRequest registerRequest) {
         Set<RoleDto> roles = new HashSet<>();

@@ -3,6 +3,10 @@ package vn.utc.service.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
@@ -52,8 +56,18 @@ public class ManagerController {
         responseDataDto.setData(staffProfileDto);
         return ResponseEntity.ok(responseDataDto);
     }
+    
     @GetMapping(value = "/appointments", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getAppointments(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getAppointments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to,
+            @RequestParam(required = false) String date,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -61,12 +75,30 @@ public class ManagerController {
             responseDataDto.setErrorCode("99");
             return ResponseEntity.status(403).body(responseDataDto);
         }
-        List<AppointmentDto> appointmentDtoList = appointmentService.getAllAppointments();
-        responseDataDto.setData(appointmentDtoList); // Replace with actual appointment data
+        
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+            Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<AppointmentDto> appointmentPage = appointmentService.getAllAppointments(pageable, status, from, to, date);
+        PaginatedResponseDto<AppointmentDto> paginatedResponse = PaginatedResponseDto.of(
+            appointmentPage.getContent(),
+            appointmentPage.getNumber(),
+            appointmentPage.getSize(),
+            appointmentPage.getTotalElements()
+        );
+        
+        responseDataDto.setData(paginatedResponse);
         return ResponseEntity.ok(responseDataDto);
     }
+    
     @GetMapping(value = "/staff", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getStaffs(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getStaffs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -74,12 +106,32 @@ public class ManagerController {
             responseDataDto.setErrorCode("99");
             return ResponseEntity.status(403).body(responseDataDto);
         }
-        Optional<List<StaffDto>> staffProfileDtos = staffService.findAll();
-        responseDataDto.setData(staffProfileDtos); // Replace with actual staff data
+        
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+            Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<StaffDto> staffPage = staffService.findAll(pageable);
+        PaginatedResponseDto<StaffDto> paginatedResponse = PaginatedResponseDto.of(
+            staffPage.getContent(),
+            staffPage.getNumber(),
+            staffPage.getSize(),
+            staffPage.getTotalElements()
+        );
+        
+        responseDataDto.setData(paginatedResponse);
         return ResponseEntity.ok(responseDataDto);
     }
+    
     @GetMapping(value = "/customers", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getCustomer(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getCustomer(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -87,12 +139,35 @@ public class ManagerController {
             responseDataDto.setErrorCode("99");
             return ResponseEntity.status(403).body(responseDataDto);
         }
-        List<CustomerDto> customerDtoList =  customerService.findAllCustomers();
-        responseDataDto.setData(customerDtoList); // Replace with actual staff data
+        
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+            Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<CustomerDto> customerPage = customerService.findAllCustomers(pageable, search, status);
+        PaginatedResponseDto<CustomerDto> paginatedResponse = PaginatedResponseDto.of(
+            customerPage.getContent(),
+            customerPage.getNumber(),
+            customerPage.getSize(),
+            customerPage.getTotalElements()
+        );
+        
+        responseDataDto.setData(paginatedResponse);
         return ResponseEntity.ok(responseDataDto);
     }
+    
     @GetMapping(value = "/vehicles", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getVehicles(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getVehicles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer customerId,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -100,8 +175,20 @@ public class ManagerController {
             responseDataDto.setErrorCode("99");
             return ResponseEntity.status(403).body(responseDataDto);
         }
-        List<VehicleDto> vehicleDtoList = vehicleService.getAllVehicles();
-        responseDataDto.setData(vehicleDtoList); // Replace with actual staff data
+        
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+            Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<VehicleDto> vehiclePage = vehicleService.getAllVehicles(pageable, search, make, model, year, customerId);
+        PaginatedResponseDto<VehicleDto> paginatedResponse = PaginatedResponseDto.of(
+            vehiclePage.getContent(),
+            vehiclePage.getNumber(),
+            vehiclePage.getSize(),
+            vehiclePage.getTotalElements()
+        );
+        
+        responseDataDto.setData(paginatedResponse);
         return ResponseEntity.ok(responseDataDto);
     }
 
@@ -202,7 +289,12 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/inventory/low-stock", produces = "application/json")
-    public ResponseEntity<ResponseDataDto> getLowStockItems(HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> getLowStockItems(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -212,8 +304,19 @@ public class ManagerController {
         }
 
         try {
-            List<SparePart> lowStockItems = sparePartService.findLowStockItems();
-            responseDataDto.setData(lowStockItems);
+            Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+                Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            
+            Page<SparePart> lowStockPage = sparePartService.findLowStockItems(pageable);
+            PaginatedResponseDto<SparePart> paginatedResponse = PaginatedResponseDto.of(
+                lowStockPage.getContent(),
+                lowStockPage.getNumber(),
+                lowStockPage.getSize(),
+                lowStockPage.getTotalElements()
+            );
+            
+            responseDataDto.setData(paginatedResponse);
             return ResponseEntity.ok(responseDataDto);
         } catch (Exception e) {
             responseDataDto.setErrorMessage("Error fetching low stock items: " + e.getMessage());

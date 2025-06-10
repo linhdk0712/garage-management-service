@@ -1,6 +1,8 @@
 package vn.utc.service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.dtos.CustomerRegister;
@@ -47,5 +49,18 @@ public class CustomerService {
                 .toList();
     }
 
+    public Page<CustomerDto> findAllCustomers(Pageable pageable) {
+        return customerRepository.findAll(pageable)
+                .map(customerMapper::toDto);
+    }
+
+    public Page<CustomerDto> findAllCustomers(Pageable pageable, String search, String status) {
+        if (search != null && !search.trim().isEmpty() || status != null && !status.trim().isEmpty()) {
+            return customerRepository.findBySearchAndStatus(search, status, pageable)
+                    .map(customerMapper::toDto);
+        }
+        return customerRepository.findAll(pageable)
+                .map(customerMapper::toDto);
+    }
 
 }

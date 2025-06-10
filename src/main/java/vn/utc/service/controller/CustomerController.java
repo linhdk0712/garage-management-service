@@ -3,11 +3,16 @@ package vn.utc.service.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
 import vn.utc.service.dtos.CustomerProfileDto;
+import vn.utc.service.dtos.PaginatedResponseDto;
 import vn.utc.service.dtos.ResponseDataDto;
 import vn.utc.service.service.CustomerProfileService;
 
@@ -41,8 +46,15 @@ public class CustomerController {
   }
 
   @GetMapping(value = "/profile", produces = "application/json")
-  public ResponseEntity<ResponseDataDto> getCustomerProfile(HttpServletRequest request) {
-    // Implementation to retrieve customer profile
+  public ResponseEntity<ResponseDataDto> getCustomerProfile(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDir,
+      @RequestParam(required = false) String search,
+      @RequestParam(required = false) String status,
+      HttpServletRequest request) {
+    // Implementation to retrieve customer profile with pagination
     ResponseDataDto responseDataDto = new ResponseDataDto();
     List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
     if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
@@ -51,9 +63,21 @@ public class CustomerController {
       return ResponseEntity.status(403).body(responseDataDto);
     }
 
-    List<CustomerProfileDto> customerProfileDtos = customerProfileService.findAllCustomerProfiles();
+    Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+        Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    
+    Page<CustomerProfileDto> customerProfilePage = customerProfileService.findAllCustomerProfiles(
+        pageable, search, status);
+    
+    PaginatedResponseDto<CustomerProfileDto> paginatedResponse = PaginatedResponseDto.of(
+        customerProfilePage.getContent(),
+        customerProfilePage.getNumber(),
+        customerProfilePage.getSize(),
+        customerProfilePage.getTotalElements()
+    );
 
-    responseDataDto.setData(customerProfileDtos);
+    responseDataDto.setData(paginatedResponse);
     return ResponseEntity.ok(responseDataDto);
   }
 }

@@ -1,6 +1,9 @@
 package vn.utc.service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.utc.service.entity.SparePart;
 import vn.utc.service.repo.SparePartRepository;
@@ -30,6 +33,34 @@ public class SparePartService {
         return allParts.stream()
                 .filter(part -> part.getQuantityInStock() <= part.getMinimumStockLevel())
                 .toList();
+    }
+    
+    /**
+     * Find all spare parts that are below their minimum stock level with pagination
+     * @param pageable Pagination parameters
+     * @return Page of spare parts with low stock
+     */
+    public Page<SparePart> findLowStockItems(Pageable pageable) {
+        List<SparePart> allParts = sparePartRepository.findAll();
+        
+        // If no parts in database, return mock data for testing
+        if (allParts.isEmpty()) {
+            List<SparePart> mockLowStockItems = createMockLowStockItems();
+            return new PageImpl<>(mockLowStockItems, pageable, mockLowStockItems.size());
+        }
+        
+        List<SparePart> lowStockItems = allParts.stream()
+                .filter(part -> part.getQuantityInStock() <= part.getMinimumStockLevel())
+                .toList();
+        
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), lowStockItems.size());
+        
+        if (start > lowStockItems.size()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, lowStockItems.size());
+        }
+        
+        return new PageImpl<>(lowStockItems.subList(start, end), pageable, lowStockItems.size());
     }
     
     /**
@@ -104,6 +135,62 @@ public class SparePartService {
         }
         
         return allParts;
+    }
+    
+    /**
+     * Find all spare parts with pagination
+     * @param pageable Pagination parameters
+     * @return Page of all spare parts
+     */
+    public Page<SparePart> findAll(Pageable pageable) {
+        List<SparePart> allParts = sparePartRepository.findAll();
+        
+        // If no parts in database, return mock data for testing
+        if (allParts.isEmpty()) {
+            List<SparePart> mockParts = createMockParts();
+            return new PageImpl<>(mockParts, pageable, mockParts.size());
+        }
+        
+        return sparePartRepository.findAll(pageable);
+    }
+    
+    /**
+     * Find all spare parts with filters and pagination
+     * @param pageable Pagination parameters
+     * @param category Category filter
+     * @param search Search term filter
+     * @param stockStatus Stock status filter
+     * @return Page of filtered spare parts
+     */
+    public Page<SparePart> findAll(Pageable pageable, String category, String search, String stockStatus) {
+        List<SparePart> allParts = sparePartRepository.findAll();
+        
+        // If no parts in database, return mock data for testing
+        if (allParts.isEmpty()) {
+            List<SparePart> mockParts = createMockParts();
+            return new PageImpl<>(mockParts, pageable, mockParts.size());
+        }
+        
+        // Apply filters
+        List<SparePart> filteredParts = allParts.stream()
+                .filter(part -> category == null || category.isEmpty() || category.equals(part.getCategory()))
+                .filter(part -> search == null || search.isEmpty() || 
+                        part.getName().toLowerCase().contains(search.toLowerCase()) ||
+                        part.getDescription().toLowerCase().contains(search.toLowerCase()))
+                .filter(part -> stockStatus == null || stockStatus.isEmpty() || 
+                        (stockStatus.equals("LOW") && part.getQuantityInStock() <= part.getMinimumStockLevel()) ||
+                        (stockStatus.equals("MODERATE") && part.getQuantityInStock() > part.getMinimumStockLevel() && part.getQuantityInStock() <= part.getMinimumStockLevel() * 2) ||
+                        (stockStatus.equals("ADEQUATE") && part.getQuantityInStock() > part.getMinimumStockLevel() * 2))
+                .toList();
+        
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredParts.size());
+        
+        if (start > filteredParts.size()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, filteredParts.size());
+        }
+        
+        return new PageImpl<>(filteredParts.subList(start, end), pageable, filteredParts.size());
     }
     
     /**
