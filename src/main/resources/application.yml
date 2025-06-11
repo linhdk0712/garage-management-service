@@ -16,6 +16,39 @@ spring:
       pool-name: HikariPool
   main:
     lazy-initialization: false
+
+# Spring Boot Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+      probes:
+        enabled: true
+  health:
+    defaults:
+      enabled: true
+    db:
+      enabled: true
+    diskspace:
+      enabled: true
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 app:
   jwt:
     secret: ${JWT_SECRET:EhWw6CTgMWwCLNRDy6LmU2cpsrLVobTVID9HE3Oe+sVoWO21kxt1YE6xGFmV7oAB5Qzlf+SarhBSAoKLgihIpg==}

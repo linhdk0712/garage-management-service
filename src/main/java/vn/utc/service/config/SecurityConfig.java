@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import vn.utc.service.service.CustomUserDetailsService;
 
 import java.util.Arrays;
 
@@ -26,7 +25,6 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-  private final CustomUserDetailsService customUserDetailsService;
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private static final String[] AUTH_WHITELIST = {
     "/v3/api-docs/**",
@@ -34,7 +32,11 @@ public class SecurityConfig {
     "/swagger-ui/**",
     "/swagger-ui.html",
     "/api/v1/auth/login",
-    "/api/v1/auth/register"
+    "/api/v1/auth/register",
+    "/actuator/**",
+    "/actuator/health/**",
+    "/actuator/info/**",
+    "/actuator/metrics/**"
   };
 
   @Bean
