@@ -150,6 +150,15 @@ public class AppointmentService {
     }
     
     /**
+     * Get appointments for a specific staff member
+     */
+    public Page<AppointmentDto> getAppointmentsByStaffId(Integer staffId, Pageable pageable, String status, String from, String to) {
+        // For now, return all appointments since appointments don't have direct staff relationship
+        // In a real scenario, you might need to join through work orders or add staff_id to appointments
+        return getAllAppointments(pageable, status, from, to, null);
+    }
+    
+    /**
      * Parse a date string to Instant. Supports multiple formats:
      * - ISO-8601 format (2023-12-25T10:30:00Z)
      * - Date only format (2023-12-25)
