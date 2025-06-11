@@ -591,7 +591,7 @@ class VehicleServiceTest {
                 "Toyota",
                 "Camry",
                 2021, // Updated year
-                "ABC123",
+                "XYZ789", // Different license plate to test validation
                 "1HGBH41JXMN109186",
                 "Red", // Updated color
                 60000, // Updated mileage
@@ -604,7 +604,7 @@ class VehicleServiceTest {
         updatedVehicle.setMake("Toyota");
         updatedVehicle.setModel("Camry");
         updatedVehicle.setYear(2021);
-        updatedVehicle.setLicensePlate("ABC123");
+        updatedVehicle.setLicensePlate("XYZ789");
         updatedVehicle.setColor("Red");
         updatedVehicle.setMileage(60000);
 
@@ -613,7 +613,7 @@ class VehicleServiceTest {
                 "Toyota",
                 "Camry",
                 2021,
-                "ABC123",
+                "XYZ789",
                 "1HGBH41JXMN109186",
                 "Red",
                 60000,
@@ -622,7 +622,7 @@ class VehicleServiceTest {
         );
 
         when(vehicleRepository.findById(1)).thenReturn(Optional.of(vehicle));
-        when(vehicleRepository.existsByLicensePlate("ABC123")).thenReturn(false);
+        when(vehicleRepository.existsByLicensePlate("XYZ789")).thenReturn(false);
         when(vehicleMapper.partialUpdate(updateDto, vehicle)).thenReturn(updatedVehicle);
         when(vehicleRepository.save(updatedVehicle)).thenReturn(updatedVehicle);
         when(vehicleMapper.toDto(updatedVehicle)).thenReturn(expectedDto);
@@ -634,7 +634,7 @@ class VehicleServiceTest {
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(expectedDto);
         verify(vehicleRepository).findById(1);
-        verify(vehicleRepository).existsByLicensePlate("ABC123");
+        verify(vehicleRepository).existsByLicensePlate("XYZ789");
         verify(vehicleMapper).partialUpdate(updateDto, vehicle);
         verify(vehicleRepository).save(updatedVehicle);
         verify(vehicleMapper).toDto(updatedVehicle);

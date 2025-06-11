@@ -20,13 +20,10 @@ import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.CustomerRepository;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +97,7 @@ class CustomerServiceTest {
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(customerDto);
+    assertThat(result).contains(customerDto);
         verify(userService).findById(1);
         verify(userMapper).toEntity(userDto);
         verify(customerRepository).findCustomerByUser(user);

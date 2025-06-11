@@ -26,9 +26,15 @@ public class CustomerService {
     private final UserMapper userMapper;
 
    public Optional<CustomerDto> findByCustomerId(int id) {
-       UserDto userDto = userService.findById(id).orElse(null);
-       Customer customer = customerRepository.findCustomerByUser(userMapper.toEntity(userDto)).orElse(null);
-        return Optional.ofNullable(customerMapper.toDto(customer));
+       Optional<UserDto> userDtoOpt = userService.findById(id);
+       if (userDtoOpt.isEmpty()) {
+           return Optional.empty();
+       }
+       
+       User user = userMapper.toEntity(userDtoOpt.get());
+       Optional<Customer> customerOpt = customerRepository.findCustomerByUser(user);
+       
+       return customerOpt.map(customerMapper::toDto);
     }
 
     public  CustomerDto saveCustomer(CustomerRegister customerRegister) {
@@ -36,12 +42,15 @@ public class CustomerService {
         return customerMapper.toDto(customerRepository.save(customer));
     }
     public Optional<CustomerDto> finByUserName(String userName) {
-        UserDto userDto = userService.findByUsername(userName).orElse(null);
-        if (userDto == null) {
+        Optional<UserDto> userDtoOpt = userService.findByUsername(userName);
+        if (userDtoOpt.isEmpty()) {
             return Optional.empty();
         }
-        Customer customer = customerRepository.findCustomerByUser(userMapper.toEntity(userDto)).orElse(null);
-        return Optional.ofNullable(customerMapper.toDto(customer));
+        
+        User user = userMapper.toEntity(userDtoOpt.get());
+        Optional<Customer> customerOpt = customerRepository.findCustomerByUser(user);
+        
+        return customerOpt.map(customerMapper::toDto);
     }
     public List<CustomerDto> findAllCustomers() {
         List<Customer> customers = customerRepository.findAll();

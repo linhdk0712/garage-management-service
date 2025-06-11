@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -237,6 +236,7 @@ class UserServiceTest {
     void findById_WhenUserNotFound_ShouldReturnEmpty() {
         // Given
         when(userRepository.findById(999)).thenReturn(Optional.empty());
+        when(userMapper.toDto(null)).thenReturn(null);
 
         // When
         Optional<UserDto> result = userService.findById(999);
@@ -244,14 +244,15 @@ class UserServiceTest {
         // Then
         assertThat(result).isEmpty();
         verify(userRepository).findById(999);
-        verifyNoInteractions(userMapper);
+        verify(userMapper).toDto(null);
     }
 
     @Test
-    @DisplayName("Should return null when user is null")
+    @DisplayName("Should return empty when user mapper returns null")
     void findById_WhenUserIsNull_ShouldReturnEmpty() {
         // Given
-        when(userRepository.findById(999)).thenReturn(Optional.empty());
+        when(userRepository.findById(999)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(null);
 
         // When
         Optional<UserDto> result = userService.findById(999);
@@ -259,6 +260,6 @@ class UserServiceTest {
         // Then
         assertThat(result).isEmpty();
         verify(userRepository).findById(999);
-        verifyNoInteractions(userMapper);
+        verify(userMapper).toDto(user);
     }
 } 

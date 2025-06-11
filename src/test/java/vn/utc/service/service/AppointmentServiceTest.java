@@ -346,12 +346,11 @@ class AppointmentServiceTest {
         // Convert string dates to Instant for mocking
         Instant fromInstant = LocalDate.parse(from).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant toInstant = LocalDate.parse(to).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant dateInstant = LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant();
         
         Page<Appointment> appointmentPage = new PageImpl<>(List.of(appointment), pageable, 1);
         Page<AppointmentDto> expectedPage = new PageImpl<>(List.of(appointmentDto), pageable, 1);
 
-        when(appointmentRepository.findByCustomerAndFilters(1, status, fromInstant, toInstant, dateInstant, pageable))
+        when(appointmentRepository.findByCustomerIdAndStatusAndDateRange(1, status, fromInstant, toInstant, pageable))
                 .thenReturn(appointmentPage);
         when(appointmentMapper.toDto(appointment)).thenReturn(appointmentDto);
 
@@ -361,7 +360,7 @@ class AppointmentServiceTest {
         // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).hasSize(1);
-        verify(appointmentRepository).findByCustomerAndFilters(1, status, fromInstant, toInstant, dateInstant, pageable);
+        verify(appointmentRepository).findByCustomerIdAndStatusAndDateRange(1, status, fromInstant, toInstant, pageable);
         verify(appointmentMapper).toDto(appointment);
     }
 
@@ -370,19 +369,19 @@ class AppointmentServiceTest {
     void getAllAppointments_WithCustomerIdAndNoFilters_ShouldReturnAllCustomerAppointments() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-        List<Appointment> allAppointments = List.of(appointment);
+        Page<Appointment> appointmentPage = new PageImpl<>(List.of(appointment), pageable, 1);
         Page<AppointmentDto> expectedPage = new PageImpl<>(List.of(appointmentDto), pageable, 1);
 
-        when(appointmentRepository.findAll()).thenReturn(allAppointments);
+        when(appointmentRepository.findByCustomerId(11, pageable)).thenReturn(appointmentPage);
         when(appointmentMapper.toDto(appointment)).thenReturn(appointmentDto);
 
         // When
-        Page<AppointmentDto> result = appointmentService.getAllAppointments(1, pageable, null, null, null, null);
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(11, pageable, null, null, null, null);
 
         // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).hasSize(1);
-        verify(appointmentRepository).findAll();
+        verify(appointmentRepository).findByCustomerId(11, pageable);
         verify(appointmentMapper).toDto(appointment);
     }
 
@@ -399,12 +398,11 @@ class AppointmentServiceTest {
         // Convert string dates to Instant for mocking
         Instant fromInstant = LocalDate.parse(from).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant toInstant = LocalDate.parse(to).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant dateInstant = LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant();
         
         Page<Appointment> appointmentPage = new PageImpl<>(List.of(appointment), pageable, 1);
         Page<AppointmentDto> expectedPage = new PageImpl<>(List.of(appointmentDto), pageable, 1);
 
-        when(appointmentRepository.findByFilters(status, fromInstant, toInstant, dateInstant, pageable))
+        when(appointmentRepository.findByStatusAndDateRange(status, fromInstant, toInstant, pageable))
                 .thenReturn(appointmentPage);
         when(appointmentMapper.toDto(appointment)).thenReturn(appointmentDto);
 
@@ -414,7 +412,7 @@ class AppointmentServiceTest {
         // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).hasSize(1);
-        verify(appointmentRepository).findByFilters(status, fromInstant, toInstant, dateInstant, pageable);
+        verify(appointmentRepository).findByStatusAndDateRange(status, fromInstant, toInstant, pageable);
         verify(appointmentMapper).toDto(appointment);
     }
 

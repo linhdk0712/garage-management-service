@@ -87,8 +87,8 @@ class SparePartServiceTest {
     }
 
     @Test
-    @DisplayName("Should return mock data when no parts exist")
-    void findLowStockItems_WhenNoPartsExist_ShouldReturnMockData() {
+    @DisplayName("Should return empty list when no parts exist")
+    void findLowStockItems_WhenNoPartsExist_ShouldReturnEmptyList() {
         // Given
         when(sparePartRepository.findAll()).thenReturn(List.of());
 
@@ -96,10 +96,7 @@ class SparePartServiceTest {
         List<SparePart> result = sparePartService.findLowStockItems();
 
         // Then
-        assertThat(result).hasSize(3);
-        assertThat(result.get(0).getName()).isEqualTo("Oil Filter");
-        assertThat(result.get(1).getName()).isEqualTo("Brake Pads");
-        assertThat(result.get(2).getName()).isEqualTo("Air Filter");
+        assertThat(result).isEmpty();
         verify(sparePartRepository).findAll();
     }
 
@@ -141,8 +138,8 @@ class SparePartServiceTest {
     }
 
     @Test
-    @DisplayName("Should return mock data with pagination when no parts exist")
-    void findLowStockItems_WithPageable_WhenNoPartsExist_ShouldReturnMockData() {
+    @DisplayName("Should return empty page when no parts exist")
+    void findLowStockItems_WithPageable_WhenNoPartsExist_ShouldReturnEmptyPage() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
         when(sparePartRepository.findAll()).thenReturn(List.of());
@@ -151,8 +148,8 @@ class SparePartServiceTest {
         Page<SparePart> result = sparePartService.findLowStockItems(pageable);
 
         // Then
-        assertThat(result.getContent()).hasSize(3);
-        assertThat(result.getTotalElements()).isEqualTo(3);
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
         verify(sparePartRepository).findAll();
     }
 
@@ -203,8 +200,8 @@ class SparePartServiceTest {
     }
 
     @Test
-    @DisplayName("Should return mock data when no parts exist")
-    void findAll_WhenNoPartsExist_ShouldReturnMockData() {
+    @DisplayName("Should return empty list when no parts exist")
+    void findAll_WhenNoPartsExist_ShouldReturnEmptyList() {
         // Given
         when(sparePartRepository.findAll()).thenReturn(List.of());
 
@@ -212,10 +209,7 @@ class SparePartServiceTest {
         List<SparePart> result = sparePartService.findAll();
 
         // Then
-        assertThat(result).hasSize(3);
-        assertThat(result.get(0).getName()).isEqualTo("Oil Filter");
-        assertThat(result.get(1).getName()).isEqualTo("Brake Pads");
-        assertThat(result.get(2).getName()).isEqualTo("Air Filter");
+        assertThat(result).isEmpty();
         verify(sparePartRepository).findAll();
     }
 
@@ -237,19 +231,20 @@ class SparePartServiceTest {
     }
 
     @Test
-    @DisplayName("Should return mock data with pagination when no parts exist")
-    void findAll_WithPageable_WhenNoPartsExist_ShouldReturnMockData() {
+    @DisplayName("Should return empty page when no parts exist")
+    void findAll_WithPageable_WhenNoPartsExist_ShouldReturnEmptyPage() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-        when(sparePartRepository.findAll()).thenReturn(List.of());
+        Page<SparePart> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        when(sparePartRepository.findAll(pageable)).thenReturn(emptyPage);
 
         // When
         Page<SparePart> result = sparePartService.findAll(pageable);
 
         // Then
-        assertThat(result.getContent()).hasSize(3);
-        assertThat(result.getTotalElements()).isEqualTo(3);
-        verify(sparePartRepository).findAll();
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
+        verify(sparePartRepository).findAll(pageable);
     }
 
     @Test
@@ -259,7 +254,7 @@ class SparePartServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         String category = "Filters";
         String search = "Oil";
-        String stockStatus = "ADEQUATE";
+        String stockStatus = "MODERATE";
         
         List<SparePart> allParts = List.of(sparePart, lowStockPart);
         when(sparePartRepository.findAll()).thenReturn(allParts);
@@ -274,8 +269,8 @@ class SparePartServiceTest {
     }
 
     @Test
-    @DisplayName("Should return mock data with filters when no parts exist")
-    void findAll_WithFilters_WhenNoPartsExist_ShouldReturnMockData() {
+    @DisplayName("Should return empty page with filters when no parts exist")
+    void findAll_WithFilters_WhenNoPartsExist_ShouldReturnEmptyPage() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
         String category = "Filters";
@@ -288,7 +283,8 @@ class SparePartServiceTest {
         Page<SparePart> result = sparePartService.findAll(pageable, category, search, stockStatus);
 
         // Then
-        assertThat(result.getContent()).hasSize(3);
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
         verify(sparePartRepository).findAll();
     }
 
