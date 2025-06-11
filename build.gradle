@@ -15,20 +15,6 @@ java {
     }
 }
 
-// Configure toolchain repositories explicitly
-repositories {
-    mavenCentral()
-    maven {
-        url = uri("https://repo1.maven.org/maven2/")
-    }
-    maven {
-        url = uri("https://services.gradle.org/distributions/")
-    }
-    maven {
-        url = uri("https://packages.adoptium.net/artifactory/adoptium/")
-    }
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
