@@ -17,8 +17,6 @@ import vn.utc.service.dtos.ResponseDataDto;
 import vn.utc.service.service.AppointmentService;
 import vn.utc.service.service.CustomerService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/customers/appointments")
 @CrossOrigin(origins = "*", maxAge = 3600)

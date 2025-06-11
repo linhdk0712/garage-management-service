@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
@@ -19,10 +18,7 @@ import vn.utc.service.entity.RefreshToken;
 import vn.utc.service.exception.TokenRefreshException;
 import vn.utc.service.service.*;
 
-import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/auth")

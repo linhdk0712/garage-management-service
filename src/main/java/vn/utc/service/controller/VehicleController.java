@@ -21,9 +21,7 @@ import vn.utc.service.service.CustomerService;
 import vn.utc.service.service.UserService;
 import vn.utc.service.service.VehicleService;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/vehicles")
