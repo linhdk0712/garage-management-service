@@ -7,13 +7,9 @@ plugins {
 group = 'vn.utc.service'
 version = '0.0.1-SNAPSHOT'
 
-// Explicit toolchain configuration for Heroku
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-        vendor = JvmVendorSpec.ADOPTIUM
-    }
-}
+// Use sourceCompatibility instead of toolchain for Heroku compatibility
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 configurations {
     compileOnly {

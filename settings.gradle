@@ -21,6 +21,12 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://packages.adoptium.net/artifactory/adoptium/")
         }
+        maven {
+            url = uri("https://download.oracle.com/")
+        }
+        maven {
+            url = uri("https://repo.bell-sw.com/java/")
+        }
     }
 }
 
