@@ -17,6 +17,8 @@ import vn.utc.service.dtos.PaginatedResponseDto;
 import vn.utc.service.dtos.ResponseDataDto;
 import vn.utc.service.dtos.UserDto;
 import vn.utc.service.dtos.VehicleDto;
+import vn.utc.service.dtos.VehicleHealthDto;
+import vn.utc.service.dtos.MaintenanceItemDto;
 import vn.utc.service.service.CustomerService;
 import vn.utc.service.service.UserService;
 import vn.utc.service.service.VehicleService;
@@ -113,5 +115,21 @@ public class VehicleController {
             responseDataDto.setErrorMessage("Failed to delete vehicle: " + e.getMessage());
             return ResponseEntity.badRequest().body(responseDataDto);
         }
+    }
+
+    @GetMapping(value = "/{id}/health", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseDataDto> getVehicleHealth(@PathVariable Integer id) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        VehicleHealthDto healthDto = vehicleService.getVehicleHealthById(id);
+        responseDataDto.setData(healthDto);
+        return ResponseEntity.ok(responseDataDto);
+    }
+
+    @GetMapping(value = "/{id}/maintenance-schedule", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseDataDto> getMaintenanceSchedule(@PathVariable Integer id) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        java.util.List<MaintenanceItemDto> schedule = vehicleService.getMaintenanceScheduleByVehicleId(id);
+        responseDataDto.setData(schedule);
+        return ResponseEntity.ok(responseDataDto);
     }
 }

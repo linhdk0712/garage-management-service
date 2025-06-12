@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.dtos.UserDto;
 import vn.utc.service.dtos.VehicleDto;
+import vn.utc.service.dtos.VehicleHealthDto;
+import vn.utc.service.dtos.ComponentHealthDto;
+import vn.utc.service.dtos.ComponentStatusDto;
+import vn.utc.service.dtos.HealthHistoryDto;
+import vn.utc.service.dtos.MaintenanceItemDto;
 import vn.utc.service.entity.Vehicle;
 import vn.utc.service.exception.CustomerNotFoundException;
 import vn.utc.service.exception.UserNotFoundException;
@@ -156,5 +161,40 @@ public class VehicleService {
    */
   public List<Vehicle> findVehiclesByCustomerIdForInitialization(Integer customerId) {
     return vehicleRepository.findVehiclesByCustomerId(customerId);
+  }
+
+  /**
+   * Get vehicle health data by vehicleId (stub implementation)
+   */
+  public VehicleHealthDto getVehicleHealthById(Integer vehicleId) {
+    // TODO: Replace with real logic to calculate health from service history, inspections, etc.
+    return new VehicleHealthDto(
+        new ComponentHealthDto(85, "Engine running smoothly."),
+        new ComponentHealthDto(80, "Transmission fluid replaced recently."),
+        new ComponentHealthDto(75, "Brake pads will need replacement soon."),
+        new ComponentHealthDto(90, "Suspension in good condition."),
+        new ComponentHealthDto(70, "Battery may need checkup."),
+        new ComponentStatusDto(4, 1, 0),
+        "up",
+        5,
+        java.util.List.of(
+            new HealthHistoryDto("2024-05-01", 70),
+            new HealthHistoryDto("2024-06-01", 75),
+            new HealthHistoryDto("2024-07-01", 80),
+            new HealthHistoryDto("2024-08-01", 85)
+        )
+    );
+  }
+
+  /**
+   * Get maintenance schedule for a vehicle by vehicleId (stub implementation)
+   */
+  public java.util.List<MaintenanceItemDto> getMaintenanceScheduleByVehicleId(Integer vehicleId) {
+    // TODO: Replace with real logic to fetch maintenance schedule from DB
+    return java.util.List.of(
+        new MaintenanceItemDto(1, "Oil Change", "2024-09-01", 15000, "UPCOMING", "MEDIUM", "Change engine oil and filter."),
+        new MaintenanceItemDto(2, "Brake Inspection", "2024-08-15", 16000, "OVERDUE", "HIGH", "Inspect and replace brake pads if needed."),
+        new MaintenanceItemDto(3, "Tire Rotation", "2024-10-01", 17000, "UPCOMING", "LOW", "Rotate tires for even wear.")
+    );
   }
 }

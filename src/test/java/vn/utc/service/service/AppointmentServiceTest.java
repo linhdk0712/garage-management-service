@@ -85,6 +85,7 @@ class AppointmentServiceTest {
                 appointment.getStatus(),
                 appointment.getServiceType(),
                 appointment.getDescription(),
+                null, // vehicle
                 appointment.getCreatedAt(),
                 appointment.getUpdatedAt()
         );
@@ -101,7 +102,7 @@ class AppointmentServiceTest {
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().id()).isEqualTo(1);
+        assertThat(result.get().appointmentId()).isEqualTo(1);
         assertThat(result.get().appointmentDate()).isEqualTo(appointment.getAppointmentDate());
         assertThat(result.get().status()).isEqualTo("PENDING");
         verify(appointmentRepository).findById(1);
@@ -132,6 +133,7 @@ class AppointmentServiceTest {
                 null, // status will be set to default
                 "OIL_CHANGE",
                 "Regular oil change service",
+                null, // vehicle
                 null, // createdAt will be set
                 null  // updatedAt will be set
         );
@@ -160,6 +162,7 @@ class AppointmentServiceTest {
                 "PENDING",
                 inputDto.serviceType(),
                 inputDto.description(),
+                null, // vehicle
                 now,
                 now
         );
@@ -192,6 +195,7 @@ class AppointmentServiceTest {
                 "CONFIRMED", // existing status
                 "OIL_CHANGE",
                 "Regular oil change service",
+                null, // vehicle
                 now,
                 now
         );
@@ -214,6 +218,7 @@ class AppointmentServiceTest {
                 "CONFIRMED",
                 inputDto.serviceType(),
                 inputDto.description(),
+                null, // vehicle
                 now,
                 now
         );

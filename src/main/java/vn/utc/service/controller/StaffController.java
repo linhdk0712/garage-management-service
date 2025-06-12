@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
@@ -15,6 +16,7 @@ import vn.utc.service.dtos.*;
 import vn.utc.service.service.StaffService;
 import vn.utc.service.service.WorkOrderService;
 import vn.utc.service.service.AppointmentService;
+import vn.utc.service.service.VehicleService;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class StaffController {
     private  final StaffService staffService;
     private final WorkOrderService workOrderService;
     private final AppointmentService appointmentService;
+    private final VehicleService vehicleService;
 
     @PostMapping(produces = "application/json",consumes = "application/json")
     public ResponseEntity<ResponseDataDto> create(@RequestBody StaffRequest registerRequest, HttpServletRequest request) {
@@ -95,4 +98,47 @@ public class StaffController {
          responseDataDto.setData(appointments);
          return ResponseEntity.ok(responseDataDto);
      }
+
+    // New endpoint for staff vehicles
+    @GetMapping("/vehicles")
+    public ResponseEntity<ResponseDataDto> getVehicles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer customerId,
+            HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.STAFF)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+
+        try {
+            Sort sort = sortDir.equalsIgnoreCase("desc") ? 
+                Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            
+            Page<VehicleDto> vehiclePage = vehicleService.getAllVehicles(pageable, search, make, model, year, customerId);
+            PaginatedResponseDto<VehicleDto> paginatedResponse = PaginatedResponseDto.of(
+                vehiclePage.getContent(),
+                vehiclePage.getNumber(),
+                vehiclePage.getSize(),
+                vehiclePage.getTotalElements()
+            );
+            
+            responseDataDto.setData(paginatedResponse);
+            return ResponseEntity.ok(responseDataDto);
+        } catch (Exception e) {
+            responseDataDto.setErrorMessage("Error fetching vehicles: " + e.getMessage());
+            responseDataDto.setErrorCode("500");
+            return ResponseEntity.status(500).body(responseDataDto);
+        }
+    }
 }

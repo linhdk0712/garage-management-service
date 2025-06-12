@@ -77,7 +77,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(
-        Arrays.asList("http://localhost:5173","https://garage-management-ui.vercel.app")); // Adjust for your frontend URL
+        Arrays.asList("http://localhost:5173","https://garage-management-ui.vercel.app","http://localhost:3000")); // Adjust for your frontend URL
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);

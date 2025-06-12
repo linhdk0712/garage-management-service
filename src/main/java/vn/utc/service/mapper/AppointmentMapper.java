@@ -6,10 +6,14 @@ import vn.utc.service.dtos.AppointmentDto;
 
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    componentModel = MappingConstants.ComponentModel.SPRING)
+    componentModel = MappingConstants.ComponentModel.SPRING,
+    uses = {VehicleMapper.class})
 public interface AppointmentMapper {
+  @Mapping(target = "id", source = "appointmentId")
   Appointment toEntity(AppointmentDto appointmentDto);
 
+  @Mapping(target = "vehicle", source = "vehicle")
+  @Mapping(target = "appointmentId", source = "id")
   AppointmentDto toDto(Appointment appointment);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

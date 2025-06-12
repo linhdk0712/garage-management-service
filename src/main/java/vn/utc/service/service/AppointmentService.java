@@ -1,6 +1,7 @@
 package vn.utc.service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,17 +30,14 @@ public class AppointmentService {
     private final AppointmentMapper appointmentMapper;
     private final CustomerMapper customerMapper;
 
+    @Transactional(readOnly = true)
     public Optional<AppointmentDto> findById(Integer id) {
         return appointmentRepository.findById(id)
-                .map(appointment ->
-                        new AppointmentDto(appointment.getId(),
-                                appointment.getAppointmentDate(),
-                                appointment.getEstimatedCompletion(),
-                                appointment.getStatus(),
-                                appointment.getServiceType(),
-                                appointment.getDescription(),
-                                appointment.getCreatedAt(),
-                                appointment.getUpdatedAt()));
+                .map(appointment -> {
+                    // Initialize vehicle to ensure it's loaded
+                    Hibernate.initialize(appointment.getVehicle());
+                    return appointmentMapper.toDto(appointment);
+                });
     }
 
     @Transactional
@@ -65,13 +63,19 @@ public class AppointmentService {
         return appointmentMapper.toDto(savedAppointment);
     }
     
+    @Transactional(readOnly = true)
     public List<AppointmentDto> getAllAppointments(Integer customerId) {
         return appointmentRepository.findAll().stream()
                 .filter(appointment -> appointment.getCustomer() != null && appointment.getCustomer().getId().equals(customerId))
-                .map(appointmentMapper::toDto)
+                .map(appointment -> {
+                    // Initialize vehicle to ensure it's loaded
+                    Hibernate.initialize(appointment.getVehicle());
+                    return appointmentMapper.toDto(appointment);
+                })
                 .toList();
     }
     
+    @Transactional(readOnly = true)
     public Page<AppointmentDto> getAllAppointments(Integer customerId, Pageable pageable) {
         List<Appointment> allAppointments = appointmentRepository.findAll();
         List<Appointment> customerAppointments = allAppointments.stream()
@@ -86,23 +90,38 @@ public class AppointmentService {
         }
         
         List<AppointmentDto> appointmentDtos = customerAppointments.subList(start, end).stream()
-                .map(appointmentMapper::toDto)
+                .map(appointment -> {
+                    // Initialize vehicle to ensure it's loaded
+                    Hibernate.initialize(appointment.getVehicle());
+                    return appointmentMapper.toDto(appointment);
+                })
                 .toList();
         
         return new PageImpl<>(appointmentDtos, pageable, customerAppointments.size());
     }
     
+    @Transactional(readOnly = true)
     public List<AppointmentDto> getAllAppointments() {
         return appointmentRepository.findAll().stream()
-                .map(appointmentMapper::toDto)
+                .map(appointment -> {
+                    // Initialize vehicle to ensure it's loaded
+                    Hibernate.initialize(appointment.getVehicle());
+                    return appointmentMapper.toDto(appointment);
+                })
                 .toList();
     }
     
+    @Transactional(readOnly = true)
     public Page<AppointmentDto> getAllAppointments(Pageable pageable) {
         return appointmentRepository.findAll(pageable)
-                .map(appointmentMapper::toDto);
+                .map(appointment -> {
+                    // Initialize vehicle to ensure it's loaded
+                    Hibernate.initialize(appointment.getVehicle());
+                    return appointmentMapper.toDto(appointment);
+                });
     }
 
+    @Transactional(readOnly = true)
     public Page<AppointmentDto> getAllAppointments(Integer customerId, Pageable pageable, String status, String from, String to, String date) {
         // Convert String parameters to Instant
         Instant fromInstant = parseDateString(from);
@@ -111,21 +130,26 @@ public class AppointmentService {
         boolean hasStatus = status != null && !status.trim().isEmpty();
         boolean hasDateRange = fromInstant != null && toInstant != null;
         
+        Page<Appointment> appointmentPage;
+        
         if (hasStatus && hasDateRange) {
-            return appointmentRepository.findByCustomerIdAndStatusAndDateRange(customerId, status, fromInstant, toInstant, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByCustomerIdAndStatusAndDateRange(customerId, status, fromInstant, toInstant, pageable);
         } else if (hasStatus) {
-            return appointmentRepository.findByCustomerIdAndStatus(customerId, status, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByCustomerIdAndStatus(customerId, status, pageable);
         } else if (hasDateRange) {
-            return appointmentRepository.findByCustomerIdAndDateRange(customerId, fromInstant, toInstant, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByCustomerIdAndDateRange(customerId, fromInstant, toInstant, pageable);
         } else {
-            return appointmentRepository.findByCustomerId(customerId, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByCustomerId(customerId, pageable);
         }
+        
+        return appointmentPage.map(appointment -> {
+            // Initialize vehicle to ensure it's loaded
+            Hibernate.initialize(appointment.getVehicle());
+            return appointmentMapper.toDto(appointment);
+        });
     }
     
+    @Transactional(readOnly = true)
     public Page<AppointmentDto> getAllAppointments(Pageable pageable, String status, String from, String to, String date) {
         // Convert String parameters to Instant
         Instant fromInstant = parseDateString(from);
@@ -134,24 +158,29 @@ public class AppointmentService {
         boolean hasStatus = status != null && !status.trim().isEmpty();
         boolean hasDateRange = fromInstant != null && toInstant != null;
         
+        Page<Appointment> appointmentPage;
+        
         if (hasStatus && hasDateRange) {
-            return appointmentRepository.findByStatusAndDateRange(status, fromInstant, toInstant, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByStatusAndDateRange(status, fromInstant, toInstant, pageable);
         } else if (hasStatus) {
-            return appointmentRepository.findByStatus(status, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByStatus(status, pageable);
         } else if (hasDateRange) {
-            return appointmentRepository.findByDateRange(fromInstant, toInstant, pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findByDateRange(fromInstant, toInstant, pageable);
         } else {
-            return appointmentRepository.findAll(pageable)
-                    .map(appointmentMapper::toDto);
+            appointmentPage = appointmentRepository.findAll(pageable);
         }
+        
+        return appointmentPage.map(appointment -> {
+            // Initialize vehicle to ensure it's loaded
+            Hibernate.initialize(appointment.getVehicle());
+            return appointmentMapper.toDto(appointment);
+        });
     }
     
     /**
      * Get appointments for a specific staff member
      */
+    @Transactional(readOnly = true)
     public Page<AppointmentDto> getAppointmentsByStaffId(Integer staffId, Pageable pageable, String status, String from, String to) {
         // For now, return all appointments since appointments don't have direct staff relationship
         // In a real scenario, you might need to join through work orders or add staff_id to appointments
