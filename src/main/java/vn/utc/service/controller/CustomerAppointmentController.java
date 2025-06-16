@@ -19,6 +19,7 @@ import vn.utc.service.dtos.VehicleDto;
 import vn.utc.service.service.AppointmentService;
 import vn.utc.service.service.CustomerService;
 import vn.utc.service.service.VehicleService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -79,32 +80,11 @@ public class CustomerAppointmentController {
     }
     
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<ResponseDataDto> createAppointment(@RequestBody AppointmentDto appointmentDto, HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> createAppointment(@Valid @RequestBody AppointmentDto appointmentDto, HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         String userName = jwtTokenProvider.getUsernameFromRequest(request);
         CustomerDto customerDto = customerService.finByUserName(userName)
                 .orElseThrow(() -> new RuntimeException("Customer not found for user: " + userName));
-        
-        // Validate appointment data
-        if (appointmentDto.appointmentDate() == null) {
-            responseDataDto.setErrorCode("99");
-            responseDataDto.setErrorMessage("Appointment date is required");
-            return ResponseEntity.badRequest().body(responseDataDto);
-        }
-        
-        if (appointmentDto.serviceType() == null || appointmentDto.serviceType().trim().isEmpty()) {
-            responseDataDto.setErrorCode("99");
-            responseDataDto.setErrorMessage("Service type is required");
-            return ResponseEntity.badRequest().body(responseDataDto);
-        }
-        
-        // Check if appointment date is in the future
-        if (appointmentDto.appointmentDate().isBefore(java.time.Instant.now())) {
-            responseDataDto.setErrorCode("99");
-            responseDataDto.setErrorMessage("Appointment date must be in the future");
-            return ResponseEntity.badRequest().body(responseDataDto);
-        }
-        
         try {
             AppointmentDto createdAppointment = appointmentService.createAppointment(appointmentDto, customerDto);
             responseDataDto.setData(createdAppointment);

@@ -1,7 +1,10 @@
 package vn.utc.service.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -9,22 +12,26 @@ import java.io.Serializable;
 @Getter
 public class CustomerRegister implements Serializable {
     private Integer id;
-    @NotNull
-    @Size(max = 50)
+    @NotBlank(message = "First name is required")
+    @Size(max = 50, message = "First name must not exceed 50 characters")
     private String firstName;
-    @NotNull @Size(max = 50)
+    @NotBlank(message = "Last name is required")
+    @Size(max = 50, message = "Last name must not exceed 50 characters")
     private String lastName;
-    @Size(max = 255)
+    @Size(max = 255, message = "Address must not exceed 255 characters")
     private String address;
-    @Size(max = 50)
+    @Size(max = 50, message = "City must not exceed 50 characters")
     private String city;
-    @Size(max = 50)
+    @Size(max = 50, message = "State must not exceed 50 characters")
     private String state;
-    @Size(max = 20)
+    @Size(max = 20, message = "Zip code must not exceed 20 characters")
+    @Pattern(regexp = "^[0-9A-Za-z\\s\\-]+$", message = "Zip code should contain only letters, digits, spaces, and hyphens")
     private String zipCode;
-    @Size(max = 20)
+    @Size(max = 20, message = "Preferred contact method must not exceed 20 characters")
     private String preferredContactMethod;
     private String notes;
+    @Valid
+    @NotNull(message = "User information is required")
     private UserDto user;
 
     public CustomerRegister setId(Integer id) {

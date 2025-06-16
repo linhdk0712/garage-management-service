@@ -3,6 +3,7 @@ package vn.utc.service.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class StaffController {
     private final VehicleService vehicleService;
 
     @PostMapping(produces = "application/json",consumes = "application/json")
-    public ResponseEntity<ResponseDataDto> create(@RequestBody StaffRequest registerRequest, HttpServletRequest request) {
+    public ResponseEntity<ResponseDataDto> create(@Valid @RequestBody StaffRequest registerRequest, HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
         List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
         if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {

@@ -1,6 +1,9 @@
 package vn.utc.service.dtos;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
@@ -11,25 +14,28 @@ import java.util.Set;
 public class UserDto implements Serializable {
   private Integer id;
 
-  @NotNull
-  @Size(max = 50)
+  @NotBlank(message = "Username is required")
+  @Size(max = 50, message = "Username must not exceed 50 characters")
   private String username;
 
-  @NotNull
-  @Size(max = 255)
+  @NotBlank(message = "Password is required")
+  @Size(max = 255, message = "Password must not exceed 255 characters")
   private String password;
 
-  @NotNull
-  @Size(max = 100)
+  @NotBlank(message = "Email is required")
+  @Email(message = "Email should be valid")
+  @Size(max = 100, message = "Email must not exceed 100 characters")
   private String email;
 
+  @Size(max = 20, message = "Role must not exceed 20 characters")
   private String role;
 
-  @Size(max = 20)
+  @Size(max = 20, message = "Phone must not exceed 20 characters")
+  @Pattern(regexp = "^[+]?[0-9\\s\\-\\(\\)]+$", message = "Phone number should contain only digits, spaces, hyphens, and parentheses")
   private String phone;
 
-  @NotNull
-  @Size(max = 20)
+  @NotNull(message = "Roles are required")
+  @Size(max = 20, message = "Roles must not exceed 20 characters")
   private Set<RoleDto> roles;
 
   private Instant createdAt;
@@ -80,8 +86,6 @@ public class UserDto implements Serializable {
     this.phone = phone;
     return this;
   }
-
-
 
   public Instant getCreatedAt() {
     return createdAt;
