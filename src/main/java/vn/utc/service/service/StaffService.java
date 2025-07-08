@@ -11,6 +11,7 @@ import vn.utc.service.dtos.StaffDto;
 import vn.utc.service.dtos.StaffRequest;
 import vn.utc.service.dtos.UserDto;
 import vn.utc.service.entity.Staff;
+import vn.utc.service.exception.UserNotFoundException;
 import vn.utc.service.mapper.StaffMapper;
 import vn.utc.service.mapper.UserMapper;
 import vn.utc.service.repo.StaffRepository;
@@ -33,7 +34,8 @@ public class StaffService {
     private final PasswordEncoder passwordEncoder;
 
     public Optional<StaffDto> findByUser(String username) {
-        UserDto userDto = userService.findByUsername(username).orElse(null);
+    UserDto userDto =
+        userService.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         if (userDto == null) {
             return Optional.empty();
         }

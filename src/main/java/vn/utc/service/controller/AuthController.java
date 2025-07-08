@@ -3,6 +3,7 @@ package vn.utc.service.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,42 +41,48 @@ public class AuthController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ResponseDataDto> login(@Valid @RequestBody LoginDto loginDto) {
-    Authentication authentication =
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = tokenProvider.generateToken(authentication);
-
-    UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
-    List<String> roles =
-        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-
-    // Create refresh token
-    RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-    JwtResponse jwtResponse =
-        new JwtResponse()
-            .setToken(jwt)
-            .setRefreshToken(refreshToken.getToken())
-            .setId(Long.valueOf(userDetails.getId()))
-            .setUsername(userDetails.getUsername())
-            .setEmail(userDetails.getEmail())
-            .setRoles(roles)
-            .setFirstName(userDetails.getFirstName())
-            .setLastName(userDetails.getLastName());
     ResponseDataDto responseDataDto = new ResponseDataDto();
-    // If the user is a customer, fetch their customer details
-    if (roles.contains(ContsConfig.CUSTOMER)) {
-      customerService
-              .findByCustomerId(userDetails.getId())
-              .ifPresent(customerDto ->jwtResponse.setFirstName(customerDto.firstName()).setLastName(customerDto.lastName()));
-    }else {
-      // For other roles, set first and last name to empty
-      staffService.findByUser(userDetails.getUsername())
-          .ifPresent(staffDto -> jwtResponse.setFirstName(staffDto.firstName()).setLastName(staffDto.lastName()));
+    try{
+      Authentication authentication =
+              authenticationManager.authenticate(
+                      new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      String jwt = tokenProvider.generateToken(authentication);
+
+      UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
+      List<String> roles =
+              userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+
+      // Create refresh token
+      RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+      JwtResponse jwtResponse =
+              new JwtResponse()
+                      .setToken(jwt)
+                      .setRefreshToken(refreshToken.getToken())
+                      .setId(Long.valueOf(userDetails.getId()))
+                      .setUsername(userDetails.getUsername())
+                      .setEmail(userDetails.getEmail())
+                      .setRoles(roles)
+                      .setFirstName(userDetails.getFirstName())
+                      .setLastName(userDetails.getLastName());
+
+      // If the user is a customer, fetch their customer details
+      if (roles.contains(ContsConfig.CUSTOMER)) {
+        customerService
+                .findByCustomerId(userDetails.getId())
+                .ifPresent(customerDto ->jwtResponse.setFirstName(customerDto.firstName()).setLastName(customerDto.lastName()));
+      }else {
+        // For other roles, set first and last name to empty
+        staffService.findByUser(userDetails.getUsername())
+                .ifPresent(staffDto -> jwtResponse.setFirstName(staffDto.firstName()).setLastName(staffDto.lastName()));
+      }
+      responseDataDto.setData(jwtResponse);
+      return ResponseEntity.ok(responseDataDto);
+    } catch (Exception e) {
+      responseDataDto.setErrorMessage(e.getMessage());
+      return ResponseEntity.badRequest().body(responseDataDto);
     }
-    responseDataDto.setData(jwtResponse);
-    return ResponseEntity.ok(responseDataDto);
   }
 
   @PostMapping(
