@@ -3,7 +3,6 @@ package vn.utc.service.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.utc.service.entity.Appointment;
-import vn.utc.service.entity.Customer;
 import vn.utc.service.entity.SparePart;
 import vn.utc.service.entity.Staff;
 import vn.utc.service.repo.AppointmentRepository;
@@ -13,8 +12,6 @@ import vn.utc.service.repo.StaffRepository;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;

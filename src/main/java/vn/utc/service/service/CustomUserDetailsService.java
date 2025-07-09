@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import vn.utc.service.dtos.UserDto;
 import vn.utc.service.dtos.UserPrincipal;
-import vn.utc.service.entity.User;
 import vn.utc.service.mapper.UserMapper;
 import java.time.Instant;
 
