@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import vn.utc.service.entity.User;
 
 @Service
 @RequiredArgsConstructor
@@ -127,5 +128,14 @@ public class StaffService {
     @Transactional
     public List<Staff> saveAllForInitialization(List<Staff> staffList) {
         return staffRepository.saveAll(staffList);
+    }
+
+    /**
+     * Find staff by user for data initialization purposes
+     * @param user The user to search for
+     * @return Optional containing the Staff entity if found
+     */
+    public Optional<Staff> findStaffByUserForInitialization(User user) {
+        return staffRepository.findStaffByUser(user);
     }
 }

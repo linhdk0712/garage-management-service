@@ -8,6 +8,7 @@ import java.io.Serializable;
 /** DTO for {@link vn.utc.service.entity.Customer} */
 public record CustomerDto(
     Integer id,
+    UserDto user,
     @NotNull @Size(max = 50) String firstName,
     @NotNull @Size(max = 50) String lastName,
     @Size(max = 255) String address,

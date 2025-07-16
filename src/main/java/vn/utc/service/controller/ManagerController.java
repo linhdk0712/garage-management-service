@@ -15,6 +15,7 @@ import vn.utc.service.dtos.*;
 import vn.utc.service.entity.SparePart;
 import vn.utc.service.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +98,54 @@ public class ManagerController {
         }
     }
 
+    @GetMapping(value = "/appointments/{appointmentId}", produces = "application/json")
+    public ResponseEntity<ResponseDataDto> getAppointmentById(@PathVariable Integer appointmentId, HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+        return appointmentService.findById(appointmentId)
+                .map(appointmentDto -> {
+                    responseDataDto.setData(appointmentDto);
+                    return ResponseEntity.ok(responseDataDto);
+                })
+                .orElseGet(() -> {
+                    responseDataDto.setErrorCode("404");
+                    responseDataDto.setErrorMessage("Appointment not found");
+                    return ResponseEntity.status(404).body(responseDataDto);
+                });
+    }
+
+    @PutMapping(value = "/appointments", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<ResponseDataDto> updateAppointmentStatus(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+        try {
+            Integer appointmentId = (Integer) payload.get("appointmentId");
+            String status = (String) payload.get("status");
+            if (appointmentId == null || status == null) {
+                responseDataDto.setErrorMessage("Missing appointmentId or status");
+                responseDataDto.setErrorCode("400");
+                return ResponseEntity.badRequest().body(responseDataDto);
+            }
+            AppointmentDto updated = appointmentService.updateAppointmentStatus(appointmentId, status);
+            responseDataDto.setData(updated);
+            return ResponseEntity.ok(responseDataDto);
+        } catch (Exception e) {
+            responseDataDto.setErrorMessage("Error updating appointment status: " + e.getMessage());
+            responseDataDto.setErrorCode("500");
+            return ResponseEntity.status(500).body(responseDataDto);
+        }
+    }
+
     @GetMapping(value = "/staff", produces = "application/json")
     public ResponseEntity<ResponseDataDto> getStaffs(
             @RequestParam(defaultValue = "0") int page,
@@ -144,8 +193,14 @@ public class ManagerController {
             @RequestParam(required = false) String status,
             HttpServletRequest request) {
         ResponseDataDto responseDataDto = new ResponseDataDto();
-        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
-        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+        String roles = jwtTokenProvider.getRolesFromRequest(request).get(0);
+        // Check if the user has the required roles
+        // Manager and Receptionist can access customer data
+        // If roles are empty or do not contain the required roles, return unauthorized response
+        List<String> requiredRoles = new ArrayList<>();
+        requiredRoles.add(ContsConfig.MANAGER);
+        requiredRoles.add(ContsConfig.RECEPTIONIST);
+        if (roles.isEmpty() || !requiredRoles.contains(roles)) {
             responseDataDto.setErrorMessage("Unauthorized access");
             responseDataDto.setErrorCode("99");
             return ResponseEntity.status(403).body(responseDataDto);

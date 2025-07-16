@@ -11,10 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.utc.service.config.ContsConfig;
 import vn.utc.service.config.JwtTokenProvider;
+import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.dtos.CustomerProfileDto;
 import vn.utc.service.dtos.PaginatedResponseDto;
 import vn.utc.service.dtos.ResponseDataDto;
+import vn.utc.service.entity.CustomerProfile;
 import vn.utc.service.service.CustomerProfileService;
+import vn.utc.service.service.CustomerService;
 
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class CustomerController {
 
   private final JwtTokenProvider jwtTokenProvider;
   private final CustomerProfileService customerProfileService;
+  private final CustomerService customerService;
 
   @GetMapping(value = "/profile/{userName}", produces = "application/json")
   public ResponseEntity<ResponseDataDto> getCustomerInfo(
@@ -44,7 +48,22 @@ public class CustomerController {
     responseDataDto.setData(customerProfileDto);
     return ResponseEntity.ok(responseDataDto);
   }
+  @GetMapping(value = "/{id}", produces = "application/json")
+  public ResponseEntity<ResponseDataDto> getCustomerById(@PathVariable Integer id, HttpServletRequest request) {
+    ResponseDataDto responseDataDto = new ResponseDataDto();
 
+    CustomerDto customerDto = customerService.findByCustomerUserId(id).orElse(null);
+    // Optionally, add role checks here if you want to restrict access
+      assert customerDto != null;
+      CustomerProfileDto customerProfile = customerProfileService.findCustomerProfileById(customerDto.user().getId()).orElse(null);
+    if (customerProfile == null) {
+      responseDataDto.setErrorCode("404");
+      responseDataDto.setErrorMessage("Customer not found");
+      return ResponseEntity.status(404).body(responseDataDto);
+    }
+    responseDataDto.setData(customerProfile);
+    return ResponseEntity.ok(responseDataDto);
+  }
   @GetMapping(value = "/profile", produces = "application/json")
   public ResponseEntity<ResponseDataDto> getCustomerProfile(
       @RequestParam(defaultValue = "0") int page,

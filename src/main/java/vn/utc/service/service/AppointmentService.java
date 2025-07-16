@@ -14,10 +14,7 @@ import vn.utc.service.mapper.AppointmentMapper;
 import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.repo.AppointmentRepository;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -126,6 +123,7 @@ public class AppointmentService {
         // Convert String parameters to Instant
         Instant fromInstant = parseDateString(from);
         Instant toInstant = parseDateString(to);
+
         
         boolean hasStatus = status != null && !status.trim().isEmpty();
         boolean hasDateRange = fromInstant != null && toInstant != null;
@@ -154,6 +152,8 @@ public class AppointmentService {
         // Convert String parameters to Instant
         Instant fromInstant = parseDateString(from);
         Instant toInstant = parseDateString(to);
+
+
         
         boolean hasStatus = status != null && !status.trim().isEmpty();
         boolean hasDateRange = fromInstant != null && toInstant != null;
@@ -188,6 +188,22 @@ public class AppointmentService {
     }
     
     /**
+     * Update the status of an appointment by its ID
+     * @param appointmentId the ID of the appointment
+     * @param status the new status to set
+     * @return the updated AppointmentDto
+     */
+    @Transactional
+    public AppointmentDto updateAppointmentStatus(Integer appointmentId, String status) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + appointmentId));
+        appointment.setStatus(status);
+        appointment.setUpdatedAt(Instant.now());
+        Appointment saved = appointmentRepository.save(appointment);
+        return appointmentMapper.toDto(saved);
+    }
+    
+    /**
      * Parse a date string to Instant. Supports multiple formats:
      * - ISO-8601 format (2023-12-25T10:30:00Z)
      * - Date only format (2023-12-25)
@@ -205,12 +221,12 @@ public class AppointmentService {
             try {
                 // Try parsing as LocalDateTime
                 LocalDateTime localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+                return localDateTime.atZone(ZoneOffset.UTC).toInstant();
             } catch (DateTimeParseException e2) {
                 try {
                     // Try parsing as LocalDate (assume start of day)
                     LocalDate localDate = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
-                    return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+                    return localDate.atStartOfDay(ZoneOffset.UTC).toInstant();
                 } catch (DateTimeParseException e3) {
                     // If all parsing fails, return null
                     return null;

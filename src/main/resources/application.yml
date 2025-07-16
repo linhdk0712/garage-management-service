@@ -16,6 +16,8 @@ spring:
       pool-name: HikariPool
   main:
     lazy-initialization: false
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
 
 # Spring Boot Actuator Configuration
 management:

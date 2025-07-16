@@ -36,6 +36,12 @@ public class CustomerService {
 
     return customerOpt.map(customerMapper::toDto);
   }
+  public Optional<CustomerDto> findByCustomerUserId(int id) {
+
+    Optional<Customer> customerOpt = customerRepository.findCustomerById(id);
+
+    return customerOpt.map(customerMapper::toDto);
+  }
 
   public CustomerDto saveCustomer(CustomerRegister customerRegister) {
     Customer customer = customerMapper.toEntityFromRegister(customerRegister);

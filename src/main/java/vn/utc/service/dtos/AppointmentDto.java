@@ -21,7 +21,7 @@ public record AppointmentDto(
     Instant estimatedCompletion,
     
     @Size(max = 20, message = "Status must not exceed 20 characters")
-    @Pattern(regexp = "^(SCHEDULED|IN_PROGRESS|COMPLETED|CANCELLED|NO_SHOW)$", 
+    @Pattern(regexp = "^(PENDING|SCHEDULED|IN_PROGRESS|COMPLETED|CANCELLED|NO_SHOW)$",
              message = "Status must be one of: SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW")
     String status,
     
@@ -33,5 +33,8 @@ public record AppointmentDto(
     
     VehicleDto vehicle,
     Instant createdAt,
-    Instant updatedAt)
-    implements Serializable {}
+    Instant updatedAt,
+    // Receptionist-specific fields
+    Integer customerId,
+    CustomerRegister customerRegister
+) implements Serializable {}

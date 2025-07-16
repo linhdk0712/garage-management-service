@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.Optional;
 
 
 @Slf4j
@@ -64,37 +65,40 @@ public class DataInitializationService implements ApplicationRunner {
                 return;
             }
             
-//            log.info("Truncating all tables before initialization...");
-//            truncateAllTables();
+           log.info("Truncating all tables before initialization...");
+           truncateAllTables();
+
+            // Clear Hibernate session to avoid identity conflicts after truncation
+            entityManager.clear();
             
             log.info("Testing database connection...");
             log.info("RoleService: {}", roleService);
             log.info("SparePartService: {}", sparePartService);
             log.info("UserService: {}", userService);
             
-//            log.info("Starting role initialization...");
-//            initializeRoles();
+           log.info("Starting role initialization...");
+           initializeRoles();
             
-//            log.info("Starting spare parts initialization...");
-//            initializeSpareParts();
-//
-            // log.info("Starting admin and manager initialization...");
-            // initializeAdminAndManagerUsers();
+           log.info("Starting spare parts initialization...");
+           initializeSpareParts();
+
+            log.info("Starting admin and manager initialization...");
+            initializeAdminAndManagerUsers();
             
-//            log.info("Starting user initialization...");
-//            initializeSampleUsers();
+           log.info("Starting user initialization...");
+           initializeSampleUsers();
             
-//            log.info("Starting staff initialization...");
-//            initializeSampleStaff();
-//
-//            log.info("Starting customer initialization...");
-//            initializeSampleCustomers();
+           log.info("Starting staff initialization...");
+           initializeSampleStaff();
+
+           log.info("Starting customer initialization...");
+           initializeSampleCustomers();
             
-//            log.info("Starting vehicle initialization...");
-//            initializeSampleVehicles();
-////
-//            log.info("Starting appointment initialization...");
-//            initializeSampleAppointments();
+           log.info("Starting vehicle initialization...");
+           initializeSampleVehicles();
+
+           log.info("Starting appointment initialization...");
+           initializeSampleAppointments();
             
             log.info("=== DATA INITIALIZATION COMPLETED SUCCESSFULLY ===");
         } catch (Exception e) {
@@ -255,6 +259,7 @@ public class DataInitializationService implements ApplicationRunner {
             createRole("ADMIN", "Administrator with full access"),
             createRole("MANAGER", "Manager with management access"),
             createRole("STAFF", "Staff member with limited access"),
+            createRole("RECEPTIONIST", "Receptionist with limited access"),
             createRole("CUSTOMER", "Customer with basic access")
         );
         
@@ -273,8 +278,6 @@ public class DataInitializationService implements ApplicationRunner {
                 new BigDecimal("45.99"), new BigDecimal("25.00"), 1, 3, "C3-D4", "BrakeTech Inc."),
             createSparePart("Air Filter", "Premium air filter for better engine performance", "Filters", 
                 new BigDecimal("12.99"), new BigDecimal("6.50"), 0, 4, "E5-F6", "FilterPro Ltd."),
-            
-            // Normal stock items
             createSparePart("Spark Plugs", "Iridium spark plugs for better ignition", "Ignition", 
                 new BigDecimal("8.99"), new BigDecimal("4.50"), 15, 5, "G7-H8", "SparkTech Corp."),
             createSparePart("Windshield Wipers", "Premium windshield wiper blades", "Exterior", 
@@ -288,7 +291,12 @@ public class DataInitializationService implements ApplicationRunner {
             createSparePart("Headlight Bulb", "LED headlight bulb for better visibility", "Lighting", 
                 new BigDecimal("24.99"), new BigDecimal("12.50"), 10, 5, "Q17-R18", "LightPro Inc."),
             createSparePart("Radiator Hose", "Heavy-duty radiator hose for cooling system", "Cooling", 
-                new BigDecimal("16.99"), new BigDecimal("8.00"), 7, 3, "S19-T20", "CoolingTech Ltd.")
+                new BigDecimal("16.99"), new BigDecimal("8.00"), 7, 3, "S19-T20", "CoolingTech Ltd."),
+            // Additional items for pagination
+            createSparePart("Alternator", "High output alternator", "Electrical", new BigDecimal("120.00"), new BigDecimal("80.00"), 5, 2, "U21-V22", "ElectroParts Inc."),
+            createSparePart("Timing Belt", "Durable timing belt for long life", "Engine", new BigDecimal("60.00"), new BigDecimal("30.00"), 9, 3, "W23-X24", "BeltWorks Ltd."),
+            createSparePart("Shock Absorber", "Gas-filled shock absorber", "Suspension", new BigDecimal("75.00"), new BigDecimal("40.00"), 11, 4, "Y25-Z26", "ShockMaster Co."),
+            createSparePart("Clutch Kit", "Complete clutch replacement kit", "Transmission", new BigDecimal("150.00"), new BigDecimal("90.00"), 3, 2, "A27-B28", "ClutchPro Inc.")
         );
         
         // Save spare parts using service
@@ -302,29 +310,46 @@ public class DataInitializationService implements ApplicationRunner {
         log.info("Initializing sample users...");
         
         // Create admin user
-        User adminUser = createUser("admin", "admin@garage.com", "admin123", "ADMIN");
-        userService.saveAllForInitialization(List.of(adminUser));
+        if (userService.findByUsernameForInitialization("admin").isEmpty()) {
+            User adminUser = createUser("admin", "admin@garage.com", "admin123", "ADMIN");
+            userService.saveAllForInitialization(List.of(adminUser));
+        }
         
         // Create manager user
-        User managerUser = createUser("manager", "manager@garage.com", "manager123", "MANAGER");
-        userService.saveAllForInitialization(List.of(managerUser));
+        if (userService.findByUsernameForInitialization("manager").isEmpty()) {
+            User managerUser = createUser("manager", "manager@garage.com", "manager123", "MANAGER");
+            userService.saveAllForInitialization(List.of(managerUser));
+        }
         
         // Create staff users
-        User staff1User = createUser("johnsmith", "john.smith@garage.com", "staff123", "STAFF");
-        User staff2User = createUser("mikejohnson", "mike.johnson@garage.com", "staff123", "STAFF");
-        User staff3User = createUser("sarahwilson", "sarah.wilson@garage.com", "staff123", "STAFF");
-        User staff4User = createUser("davidbrown", "david.brown@garage.com", "staff123", "STAFF");
+        String[] staffUsernames = {"johnsmith", "mikejohnson", "sarahwilson", "davidbrown", "emilyclark", "kevinlee", "laurawhite", "robertking", "angelamartin", "stevenyoung"};
+        List<User> staffUsers = new java.util.ArrayList<>();
+        for (String username : staffUsernames) {
+            if (userService.findByUsernameForInitialization(username).isEmpty()) {
+                staffUsers.add(createUser(username, username.replace(".", "_") + "@garage.com", "staff123", "STAFF"));
+            }
+        }
+        if (!staffUsers.isEmpty()) {
+            userService.saveAllForInitialization(staffUsers);
+        }
         
-        userService.saveAllForInitialization(List.of(staff1User, staff2User, staff3User, staff4User));
+        // Create receptionist user
+        if (userService.findByUsernameForInitialization("reception1").isEmpty()) {
+            User receptionistUser = createUser("reception1", "reception1@garage.com", "reception123", "RECEPTIONIST");
+            userService.saveAllForInitialization(List.of(receptionistUser));
+        }
         
         // Create customer users
-        User customer1User = createUser("johndoe", "john.doe@email.com", "customer123", "CUSTOMER");
-        User customer2User = createUser("janedoe", "jane.doe@email.com", "customer123", "CUSTOMER");
-        User customer3User = createUser("bobsmith", "bob.smith@email.com", "customer123", "CUSTOMER");
-        User customer4User = createUser("alicejohnson", "alice.johnson@email.com", "customer123", "CUSTOMER");
-        User customer5User = createUser("charliebrown", "charlie.brown@email.com", "customer123", "CUSTOMER");
-        
-        userService.saveAllForInitialization(List.of(customer1User, customer2User, customer3User, customer4User, customer5User));
+        String[] customerUsernames = {"johndoe", "janedoe", "bobsmith", "alicejohnson", "charliebrown", "lucasgray", "oliviamartin", "ethanlee", "sophiabaker", "masonhill", "avaadams"};
+        List<User> customerUsers = new java.util.ArrayList<>();
+        for (String username : customerUsernames) {
+            if (userService.findByUsernameForInitialization(username).isEmpty()) {
+                customerUsers.add(createUser(username, username + "@email.com", "customer123", "CUSTOMER"));
+            }
+        }
+        if (!customerUsers.isEmpty()) {
+            userService.saveAllForInitialization(customerUsers);
+        }
         
         log.info("Sample users initialized successfully.");
     }
@@ -397,18 +422,70 @@ public class DataInitializationService implements ApplicationRunner {
                 "Technician", "Electrical Systems", LocalDate.of(2022, 6, 10), new BigDecimal("20.00")),
             createStaffRequest("davidbrown", "david.brown@garage.com", "555-0104", "staff123", 
                 "David", "Brown", "321 Staff Dr", "Springfield", "IL", "62704", "Phone",
-                "Apprentice", "General Maintenance", LocalDate.of(2023, 1, 5), new BigDecimal("18.00"))
+                "Apprentice", "General Maintenance", LocalDate.of(2023, 1, 5), new BigDecimal("18.00")),
+            createStaffRequest("emilyclark", "emily.clark@garage.com", "555-0105", "staff123", 
+                "Emily", "Clark", "654 Staff Ln", "Springfield", "IL", "62705", "Email",
+                "Receptionist", "Front Desk", LocalDate.of(2023, 2, 10), new BigDecimal("19.00")),
+            createStaffRequest("kevinlee", "kevin.lee@garage.com", "555-0106", "staff123", 
+                "Kevin", "Lee", "987 Staff Blvd", "Springfield", "IL", "62706", "Phone",
+                "Technician", "Diagnostics", LocalDate.of(2023, 3, 15), new BigDecimal("21.00")),
+            createStaffRequest("laurawhite", "laura.white@garage.com", "555-0107", "staff123", 
+                "Laura", "White", "321 Staff Cir", "Springfield", "IL", "62707", "Email",
+                "Mechanic", "Suspension", LocalDate.of(2023, 4, 20), new BigDecimal("22.50")),
+            createStaffRequest("robertking", "robert.king@garage.com", "555-0108", "staff123", 
+                "Robert", "King", "852 Staff Pkwy", "Springfield", "IL", "62708", "Phone",
+                "Technician", "Transmission", LocalDate.of(2023, 5, 25), new BigDecimal("23.00")),
+            createStaffRequest("angelamartin", "angela.martin@garage.com", "555-0109", "staff123", 
+                "Angela", "Martin", "963 Staff Ave", "Springfield", "IL", "62709", "Email",
+                "Receptionist", "Customer Service", LocalDate.of(2023, 6, 30), new BigDecimal("19.50")),
+            createStaffRequest("stevenyoung", "steven.young@garage.com", "555-0110", "staff123", 
+                "Steven", "Young", "147 Staff St", "Springfield", "IL", "62710", "Phone",
+                "Technician", "Body Work", LocalDate.of(2023, 7, 5), new BigDecimal("20.50")),
+            createStaffRequest("reception1", "reception1@garage.com", "555-0111", "reception123", 
+                "Reception", "One", "258 Reception Rd", "Springfield", "IL", "62711", "Email",
+                "Receptionist", "Front Desk", LocalDate.of(2023, 8, 10), new BigDecimal("19.00"))
         );
         
-        // Create staff using StaffService.createStaff method
+        List<Staff> missingStaff = new java.util.ArrayList<>();
+        // Create staff using StaffService.createStaff method, only if username does not exist
         for (StaffRequest staffRequest : staffRequests) {
-            try {
-                staffService.createStaff(staffRequest);
-                log.info("Created staff member: {} {}", staffRequest.firstName(), staffRequest.lastName());
-            } catch (Exception e) {
-                log.error("Failed to create staff member {} {}: {}", 
-                    staffRequest.firstName(), staffRequest.lastName(), e.getMessage());
+            Optional<User> userOpt = userService.findByUsernameForInitialization(staffRequest.username());
+            if (userOpt.isEmpty()) {
+                try {
+                    staffService.createStaff(staffRequest);
+                    log.info("Created staff member: {} {}", staffRequest.firstName(), staffRequest.lastName());
+                } catch (Exception e) {
+                    log.error("Failed to create staff member {} {}: {}", 
+                        staffRequest.firstName(), staffRequest.lastName(), e.getMessage());
+                }
+            } else {
+                // User exists, check if Staff exists
+                User user = userOpt.get();
+                Optional<Staff> staffOpt = staffService.findStaffByUserForInitialization(user);
+                if (staffOpt.isEmpty()) {
+                    try {
+                        Staff staff = createStaff(
+                            user,
+                            staffRequest.firstName(),
+                            staffRequest.lastName(),
+                            staffRequest.position(),
+                            staffRequest.specialization(),
+                            staffRequest.hireDate(),
+                            staffRequest.hourlyRate()
+                        );
+                        missingStaff.add(staff);
+                        log.info("Prepared missing staff for user: {}", staffRequest.username());
+                    } catch (Exception e) {
+                        log.error("Failed to prepare missing staff for user {}: {}", staffRequest.username(), e.getMessage());
+                    }
+                } else {
+                    log.info("Staff for user {} already exists, skipping.", staffRequest.username());
+                }
             }
+        }
+        if (!missingStaff.isEmpty()) {
+            staffService.saveAllForInitialization(missingStaff);
+            log.info("Saved {} missing staff.", missingStaff.size());
         }
         
         log.info("Sample staff initialization completed.");
@@ -436,18 +513,62 @@ public class DataInitializationService implements ApplicationRunner {
             createRegisterRequest("alicejohnson", "alice.johnson@email.com", "555-1004", "customer123", 
                 "Alice", "Johnson", "321 Elm St", "Chicago", "IL", "60602", "EMAIL"),
             createRegisterRequest("charliebrown", "charlie.brown@email.com", "555-1005", "customer123", 
-                "Charlie", "Brown", "654 Maple Dr", "Peoria", "IL", "61601", "EMAIL")
+                "Charlie", "Brown", "654 Maple Dr", "Peoria", "IL", "61601", "EMAIL"),
+            createRegisterRequest("lucasgray", "lucas.gray@email.com", "555-1006", "customer123", 
+                "Lucas", "Gray", "987 Cedar St", "Peoria", "IL", "61602", "EMAIL"),
+            createRegisterRequest("oliviamartin", "olivia.martin@email.com", "555-1007", "customer123", 
+                "Olivia", "Martin", "159 Spruce Ave", "Peoria", "IL", "61603", "EMAIL"),
+            createRegisterRequest("ethanlee", "ethan.lee@email.com", "555-1008", "customer123", 
+                "Ethan", "Lee", "753 Birch Rd", "Peoria", "IL", "61604", "EMAIL"),
+            createRegisterRequest("sophiabaker", "sophia.baker@email.com", "555-1009", "customer123", 
+                "Sophia", "Baker", "357 Walnut St", "Peoria", "IL", "61605", "EMAIL"),
+            createRegisterRequest("masonhill", "mason.hill@email.com", "555-1010", "customer123", 
+                "Mason", "Hill", "951 Poplar Dr", "Peoria", "IL", "61606", "EMAIL"),
+            createRegisterRequest("avaadams", "ava.adams@email.com", "555-1011", "customer123", 
+                "Ava", "Adams", "258 Willow Ln", "Peoria", "IL", "61607", "EMAIL")
         );
         
-        // Create customers using AuthService.registerCustomer method
+        List<Customer> missingCustomers = new java.util.ArrayList<>();
+        // Create customers using AuthService.registerCustomer method, only if username does not exist
         for (RegisterRequest customerRequest : customerRequests) {
-            try {
-                authService.registerCustomer(customerRequest);
-                log.info("Created customer: {} {}", customerRequest.firstName(), customerRequest.lastName());
-            } catch (Exception e) {
-                log.error("Failed to create customer {} {}: {}", 
-                    customerRequest.firstName(), customerRequest.lastName(), e.getMessage());
+            Optional<User> userOpt = userService.findByUsernameForInitialization(customerRequest.username());
+            if (userOpt.isEmpty()) {
+                try {
+                    authService.registerCustomer(customerRequest);
+                    log.info("Created customer: {} {}", customerRequest.firstName(), customerRequest.lastName());
+                } catch (Exception e) {
+                    log.error("Failed to create customer {} {}: {}", 
+                        customerRequest.firstName(), customerRequest.lastName(), e.getMessage());
+                }
+            } else {
+                // User exists, check if Customer exists
+                User user = userOpt.get();
+                Optional<Customer> customerOpt = customerService.findCustomerByUserForInitialization(user);
+                if (customerOpt.isEmpty()) {
+                    try {
+                        Customer customer = createCustomer(
+                            user,
+                            customerRequest.firstName(),
+                            customerRequest.lastName(),
+                            customerRequest.address(),
+                            customerRequest.city(),
+                            customerRequest.state(),
+                            customerRequest.zipCode(),
+                            customerRequest.preferredContactMethod()
+                        );
+                        missingCustomers.add(customer);
+                        log.info("Prepared missing customer for user: {}", customerRequest.username());
+                    } catch (Exception e) {
+                        log.error("Failed to prepare missing customer for user {}: {}", customerRequest.username(), e.getMessage());
+                    }
+                } else {
+                    log.info("Customer for user {} already exists, skipping.", customerRequest.username());
+                }
             }
+        }
+        if (!missingCustomers.isEmpty()) {
+            customerService.saveAllForInitialization(missingCustomers);
+            log.info("Saved {} missing customers.", missingCustomers.size());
         }
         
         log.info("Sample customers initialized successfully.");
@@ -468,8 +589,15 @@ public class DataInitializationService implements ApplicationRunner {
         User bobSmith = userService.findByUsernameForInitialization("bobsmith").orElse(null);
         User aliceJohnson = userService.findByUsernameForInitialization("alicejohnson").orElse(null);
         User charlieBrown = userService.findByUsernameForInitialization("charliebrown").orElse(null);
+        User lucasGray = userService.findByUsernameForInitialization("lucasgray").orElse(null);
+        User oliviaMartin = userService.findByUsernameForInitialization("oliviamartin").orElse(null);
+        User ethanLee = userService.findByUsernameForInitialization("ethanlee").orElse(null);
+        User sophiaBaker = userService.findByUsernameForInitialization("sophiabaker").orElse(null);
+        User masonHill = userService.findByUsernameForInitialization("masonhill").orElse(null);
+        User avaAdams = userService.findByUsernameForInitialization("avaadams").orElse(null);
         
-        if (johnDoe == null || janeDoe == null || bobSmith == null || aliceJohnson == null || charlieBrown == null) {
+        if (johnDoe == null || janeDoe == null || bobSmith == null || aliceJohnson == null || charlieBrown == null ||
+            lucasGray == null || oliviaMartin == null || ethanLee == null || sophiaBaker == null || masonHill == null || avaAdams == null) {
             log.warn("Some users not found, skipping vehicle initialization");
             return;
         }
@@ -479,12 +607,20 @@ public class DataInitializationService implements ApplicationRunner {
         Customer bobSmithCustomer = customerService.findCustomerByUserForInitialization(bobSmith).orElse(null);
         Customer aliceJohnsonCustomer = customerService.findCustomerByUserForInitialization(aliceJohnson).orElse(null);
         Customer charlieBrownCustomer = customerService.findCustomerByUserForInitialization(charlieBrown).orElse(null);
+        Customer lucasGrayCustomer = customerService.findCustomerByUserForInitialization(lucasGray).orElse(null);
+        Customer oliviaMartinCustomer = customerService.findCustomerByUserForInitialization(oliviaMartin).orElse(null);
+        Customer ethanLeeCustomer = customerService.findCustomerByUserForInitialization(ethanLee).orElse(null);
+        Customer sophiaBakerCustomer = customerService.findCustomerByUserForInitialization(sophiaBaker).orElse(null);
+        Customer masonHillCustomer = customerService.findCustomerByUserForInitialization(masonHill).orElse(null);
+        Customer avaAdamsCustomer = customerService.findCustomerByUserForInitialization(avaAdams).orElse(null);
         
         if (johnDoeCustomer == null || janeDoeCustomer == null || bobSmithCustomer == null || 
-            aliceJohnsonCustomer == null || charlieBrownCustomer == null) {
+            aliceJohnsonCustomer == null || charlieBrownCustomer == null || lucasGrayCustomer == null ||
+            oliviaMartinCustomer == null || ethanLeeCustomer == null || sophiaBakerCustomer == null ||
+            masonHillCustomer == null || avaAdamsCustomer == null) {
             log.warn("Some customers not found, skipping vehicle initialization");
-            log.warn("johnDoeCustomer: {}, janeDoeCustomer: {}, bobSmithCustomer: {}, aliceJohnsonCustomer: {}, charlieBrownCustomer: {}", 
-                johnDoeCustomer, janeDoeCustomer, bobSmithCustomer, aliceJohnsonCustomer, charlieBrownCustomer);
+            log.warn("johnDoeCustomer: {}, janeDoeCustomer: {}, bobSmithCustomer: {}, aliceJohnsonCustomer: {}, charlieBrownCustomer: {}, lucasGrayCustomer: {}, oliviaMartinCustomer: {}, ethanLeeCustomer: {}, sophiaBakerCustomer: {}, masonHillCustomer: {}, avaAdamsCustomer: {}", 
+                johnDoeCustomer, janeDoeCustomer, bobSmithCustomer, aliceJohnsonCustomer, charlieBrownCustomer, lucasGrayCustomer, oliviaMartinCustomer, ethanLeeCustomer, sophiaBakerCustomer, masonHillCustomer, avaAdamsCustomer);
             return;
         }
         
@@ -493,7 +629,13 @@ public class DataInitializationService implements ApplicationRunner {
             createVehicle(janeDoeCustomer, "Honda", "Civic", 2019, "DEF456", "2FMDK48C67BA12345", "Blue", 38000),
             createVehicle(bobSmithCustomer, "Ford", "F-150", 2021, "GHI789", "1FTEW1EG0JFA12345", "Red", 25000),
             createVehicle(aliceJohnsonCustomer, "Nissan", "Altima", 2018, "JKL012", "1N4AL3AP4JC123456", "White", 52000),
-            createVehicle(charlieBrownCustomer, "Chevrolet", "Malibu", 2022, "MNO345", "1G1ZD5ST0LF123456", "Black", 15000)
+            createVehicle(charlieBrownCustomer, "Chevrolet", "Malibu", 2022, "MNO345", "1G1ZD5ST0LF123456", "Black", 15000),
+            createVehicle(lucasGrayCustomer, "Hyundai", "Elantra", 2021, "PQR678", "KMHD84LF6JU123456", "Gray", 22000),
+            createVehicle(oliviaMartinCustomer, "Kia", "Sorento", 2020, "STU901", "5XYKT3A19EG123456", "Green", 33000),
+            createVehicle(ethanLeeCustomer, "Mazda", "CX-5", 2019, "VWX234", "JM3KFBCM6K1234567", "Blue", 41000),
+            createVehicle(sophiaBakerCustomer, "Volkswagen", "Jetta", 2018, "YZA567", "3VWD17AJ5FM123456", "White", 47000),
+            createVehicle(masonHillCustomer, "Subaru", "Outback", 2022, "BCD890", "4S4BSANC6J3321456", "Red", 12000),
+            createVehicle(avaAdamsCustomer, "Jeep", "Wrangler", 2023, "EFG123", "1C4HJXDG7JW123456", "Yellow", 8000)
         );
         
         vehicleService.saveAllForInitialization(vehicles);
@@ -503,50 +645,43 @@ public class DataInitializationService implements ApplicationRunner {
     public void initializeSampleAppointments() {
         log.info("Initializing sample appointments...");
         
-        User johnDoe = userService.findByUsernameForInitialization("johndoe").orElse(null);
-        User janeDoe = userService.findByUsernameForInitialization("janedoe").orElse(null);
-        User bobSmith = userService.findByUsernameForInitialization("bobsmith").orElse(null);
+        // Fetch all customers and vehicles for appointments
+        List<User> users = List.of(
+            userService.findByUsernameForInitialization("johndoe").orElse(null),
+            userService.findByUsernameForInitialization("janedoe").orElse(null),
+            userService.findByUsernameForInitialization("bobsmith").orElse(null),
+            userService.findByUsernameForInitialization("alicejohnson").orElse(null),
+            userService.findByUsernameForInitialization("charliebrown").orElse(null),
+            userService.findByUsernameForInitialization("lucasgray").orElse(null),
+            userService.findByUsernameForInitialization("oliviamartin").orElse(null),
+            userService.findByUsernameForInitialization("ethanlee").orElse(null),
+            userService.findByUsernameForInitialization("sophiabaker").orElse(null),
+            userService.findByUsernameForInitialization("masonhill").orElse(null),
+            userService.findByUsernameForInitialization("avaadams").orElse(null)
+        );
         
-        if (johnDoe == null || janeDoe == null || bobSmith == null) {
-            log.warn("Some users not found, skipping appointment initialization");
-            return;
-        }
+        List<Customer> customers = users.stream()
+            .map(u -> u == null ? null : customerService.findCustomerByUserForInitialization(u).orElse(null))
+            .toList();
         
-        Customer johnDoeCustomer = customerService.findCustomerByUserForInitialization(johnDoe).orElse(null);
-        Customer janeDoeCustomer = customerService.findCustomerByUserForInitialization(janeDoe).orElse(null);
-        Customer bobSmithCustomer = customerService.findCustomerByUserForInitialization(bobSmith).orElse(null);
-        
-        if (johnDoeCustomer == null || janeDoeCustomer == null || bobSmithCustomer == null) {
-            log.warn("Some customers not found, skipping appointment initialization");
-            log.warn("johnDoeCustomer: {}, janeDoeCustomer: {}, bobSmithCustomer: {}", 
-                johnDoeCustomer, janeDoeCustomer, bobSmithCustomer);
-            return;
-        }
-        
-        Vehicle johnVehicle = vehicleService.findVehiclesByCustomerIdForInitialization(johnDoeCustomer.getId()).stream().findFirst().orElse(null);
-        Vehicle janeVehicle = vehicleService.findVehiclesByCustomerIdForInitialization(janeDoeCustomer.getId()).stream().findFirst().orElse(null);
-        Vehicle bobVehicle = vehicleService.findVehiclesByCustomerIdForInitialization(bobSmithCustomer.getId()).stream().findFirst().orElse(null);
-        
-        if (johnVehicle == null || janeVehicle == null || bobVehicle == null) {
-            log.warn("Some vehicles not found, skipping appointment initialization");
-            log.warn("johnVehicle: {}, janeVehicle: {}, bobVehicle: {}", 
-                johnVehicle, janeVehicle, bobVehicle);
-            return;
-        }
+        List<Vehicle> vehicles = customers.stream()
+            .map(c -> c == null ? null : vehicleService.findVehiclesByCustomerIdForInitialization(c.getId()).stream().findFirst().orElse(null))
+            .toList();
         
         Instant now = Instant.now();
         
         List<Appointment> appointments = List.of(
-            createAppointment(johnVehicle, johnDoeCustomer, now.plusSeconds(3600), now.plusSeconds(7200), 
-                "CONFIRMED", "Oil Change", "Regular oil change service"),
-            createAppointment(janeVehicle, janeDoeCustomer, now.plusSeconds(7200), now.plusSeconds(10800), 
-                "CONFIRMED", "Brake Service", "Brake pad replacement"),
-            createAppointment(bobVehicle, bobSmithCustomer, now.minusSeconds(3600), now.plusSeconds(3600), 
-                "IN_PROGRESS", "Engine Tune-up", "Complete engine tune-up service"),
-            createAppointment(johnVehicle, johnDoeCustomer, now.minusSeconds(7200), now.minusSeconds(3600), 
-                "COMPLETED", "Tire Rotation", "Tire rotation and balance"),
-            createAppointment(janeVehicle, janeDoeCustomer, now.minusSeconds(10800), now.minusSeconds(7200), 
-                "COMPLETED", "Air Filter Replacement", "Replace air filter and cabin filter")
+            createAppointment(vehicles.get(0), customers.get(0), now.plusSeconds(3600), now.plusSeconds(7200), "CONFIRMED", "Oil Change", "Regular oil change service"),
+            createAppointment(vehicles.get(1), customers.get(1), now.plusSeconds(7200), now.plusSeconds(10800), "CONFIRMED", "Brake Service", "Brake pad replacement"),
+            createAppointment(vehicles.get(2), customers.get(2), now.minusSeconds(3600), now.plusSeconds(3600), "IN_PROGRESS", "Engine Tune-up", "Complete engine tune-up service"),
+            createAppointment(vehicles.get(3), customers.get(3), now.minusSeconds(7200), now.minusSeconds(3600), "COMPLETED", "Tire Rotation", "Tire rotation and balance"),
+            createAppointment(vehicles.get(4), customers.get(4), now.minusSeconds(10800), now.minusSeconds(7200), "COMPLETED", "Air Filter Replacement", "Replace air filter and cabin filter"),
+            createAppointment(vehicles.get(5), customers.get(5), now.plusSeconds(14400), now.plusSeconds(18000), "CONFIRMED", "Battery Replacement", "Replace car battery"),
+            createAppointment(vehicles.get(6), customers.get(6), now.plusSeconds(21600), now.plusSeconds(25200), "CONFIRMED", "Tire Change", "Change all tires"),
+            createAppointment(vehicles.get(7), customers.get(7), now.plusSeconds(28800), now.plusSeconds(32400), "CONFIRMED", "Transmission Check", "Check transmission system"),
+            createAppointment(vehicles.get(8), customers.get(8), now.plusSeconds(36000), now.plusSeconds(39600), "CONFIRMED", "Suspension Inspection", "Inspect suspension system"),
+            createAppointment(vehicles.get(9), customers.get(9), now.plusSeconds(43200), now.plusSeconds(46800), "CONFIRMED", "AC Service", "Air conditioning system service"),
+            createAppointment(vehicles.get(10), customers.get(10), now.plusSeconds(50400), now.plusSeconds(54000), "CONFIRMED", "Detailing", "Full car detailing")
         );
         
         appointmentService.saveAllForInitialization(appointments);
@@ -642,5 +777,17 @@ public class DataInitializationService implements ApplicationRunner {
         appointment.setCreatedAt(Instant.now());
         appointment.setUpdatedAt(Instant.now());
         return appointment;
+    }
+
+    public Staff createStaff(User user, String firstName, String lastName, String position, String specialization, LocalDate hireDate, BigDecimal hourlyRate) {
+        Staff staff = new Staff();
+        staff.setUser(user);
+        staff.setFirstName(firstName);
+        staff.setLastName(lastName);
+        staff.setPosition(position);
+        staff.setSpecialization(specialization);
+        staff.setHireDate(hireDate);
+        staff.setHourlyRate(hourlyRate);
+        return staff;
     }
 } 

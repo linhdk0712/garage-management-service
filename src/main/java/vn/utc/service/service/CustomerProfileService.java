@@ -21,7 +21,11 @@ public class CustomerProfileService {
         .map(customerProfileMapper::toDto)
         .toList();
   }
-
+  public Optional<CustomerProfileDto> findCustomerProfileById(Integer id) {
+    // Implement this using your repository or DAO
+    return customerProfileRepository.findCustomerProfileByUserId(id)
+            .map(customerProfileMapper::toDto); // Adjust mapping as needed
+  }
   public Page<CustomerProfileDto> findAllCustomerProfiles(Pageable pageable) {
     return customerProfileRepository.findAll(pageable)
         .map(customerProfileMapper::toDto);

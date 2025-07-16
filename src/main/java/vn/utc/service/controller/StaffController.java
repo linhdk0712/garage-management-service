@@ -142,4 +142,25 @@ public class StaffController {
             return ResponseEntity.status(500).body(responseDataDto);
         }
     }
+
+    // Endpoint to create a new work order
+    @PostMapping(value = "/work-orders", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<ResponseDataDto> createWorkOrder(@Valid @RequestBody WorkOrderDto workOrderDto, HttpServletRequest request) {
+        ResponseDataDto responseDataDto = new ResponseDataDto();
+        List<String> roles = jwtTokenProvider.getRolesFromRequest(request);
+        if (roles.isEmpty() || !roles.contains(ContsConfig.MANAGER)) {
+            responseDataDto.setErrorMessage("Unauthorized access");
+            responseDataDto.setErrorCode("99");
+            return ResponseEntity.status(403).body(responseDataDto);
+        }
+        try {
+            WorkOrderDto createdWorkOrder = workOrderService.createWorkOrder(workOrderDto);
+            responseDataDto.setData(createdWorkOrder);
+            return ResponseEntity.ok(responseDataDto);
+        } catch (Exception e) {
+            responseDataDto.setErrorMessage("Failed to create work order: " + e.getMessage());
+            responseDataDto.setErrorCode("500");
+            return ResponseEntity.status(500).body(responseDataDto);
+        }
+    }
 }

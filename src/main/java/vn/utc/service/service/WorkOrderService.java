@@ -6,8 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.WorkOrderDto;
+import vn.utc.service.entity.Appointment;
+import vn.utc.service.entity.Staff;
 import vn.utc.service.entity.WorkOrder;
 import vn.utc.service.mapper.WorkOrderMapper;
+import vn.utc.service.repo.AppointmentRepository;
+import vn.utc.service.repo.StaffRepository;
 import vn.utc.service.repo.WorkOrderRepository;
 
 import java.time.Instant;
@@ -24,6 +28,8 @@ import java.util.Optional;
 public class WorkOrderService {
     private final WorkOrderRepository workOrderRepository;
     private final WorkOrderMapper workOrderMapper;
+    private final StaffRepository staffRepository;
+    private final AppointmentRepository appointmentRepository;
 
     public Optional<WorkOrderDto> findById(Integer id) {
         return workOrderRepository.findById(id)
@@ -151,6 +157,13 @@ public class WorkOrderService {
         if (workOrder.getUpdatedAt() == null) {
             workOrder.setUpdatedAt(now);
         }
+        Staff staff = staffRepository.findStaffById(workOrderDto.staffId())
+                .orElseThrow(() -> new RuntimeException("Staff not found with ID: " + workOrderDto.staffId()));
+
+        Appointment appointment = appointmentRepository.findById(workOrderDto.appointmentId())
+                .orElseThrow(() -> new RuntimeException("Appointment not found with ID: " + workOrderDto.appointmentId()));
+        workOrder.setStaff(staff);
+        workOrder.setAppointment(appointment);
         
         WorkOrder savedWorkOrder = workOrderRepository.save(workOrder);
         return workOrderMapper.toDto(savedWorkOrder);
