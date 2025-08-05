@@ -117,6 +117,36 @@ public class VehicleService {
     vehicleEntity.setCustomer(customerMapper.toEntity(customerDto));
     return vehicleMapper.toDto(vehicleRepository.save(vehicleEntity));
   }
+  @Transactional
+  public VehicleDto createVehicle(VehicleDto vehicle, Integer customerId) {
+    if (vehicleRepository.existsByLicensePlate(vehicle.licensePlate())) {
+      throw new VehicleNotFoundException(
+              "Vehicle with license plate " + vehicle.licensePlate() + " already exists");
+    }
+
+    CustomerDto customerDto = customerService.findByCustomerUserId(customerId).orElse(null);
+    if (customerDto == null) {
+      throw new CustomerNotFoundException("Customer not found");
+    }
+
+    // Validate vehicle data
+    if (vehicle.make() == null || vehicle.make().trim().isEmpty()) {
+      throw new IllegalArgumentException("Vehicle make is required");
+    }
+    if (vehicle.model() == null || vehicle.model().trim().isEmpty()) {
+      throw new IllegalArgumentException("Vehicle model is required");
+    }
+    if (vehicle.year() == null || vehicle.year() < 1900 || vehicle.year() > (java.time.Year.now().getValue() + 1)) {
+      throw new IllegalArgumentException("Invalid vehicle year");
+    }
+    if (vehicle.licensePlate() == null || vehicle.licensePlate().trim().isEmpty()) {
+      throw new IllegalArgumentException("License plate is required");
+    }
+
+    Vehicle vehicleEntity = vehicleMapper.toEntity(vehicle);
+    vehicleEntity.setCustomer(customerMapper.toEntity(customerDto));
+    return vehicleMapper.toDto(vehicleRepository.save(vehicleEntity));
+  }
 
   public Optional<VehicleDto> updateVehicle(Integer id, VehicleDto vehicleDto) {
     Optional<Vehicle> vehicle = vehicleRepository.findById(id);
@@ -195,5 +225,10 @@ public class VehicleService {
         new MaintenanceItemDto(2, "Brake Inspection", "2024-08-15", 16000, "OVERDUE", "HIGH", "Inspect and replace brake pads if needed."),
         new MaintenanceItemDto(3, "Tire Rotation", "2024-10-01", 17000, "UPCOMING", "LOW", "Rotate tires for even wear.")
     );
+  }
+
+  public VehicleDto saveVehicle(Vehicle vehicle) {
+    Vehicle saved = vehicleRepository.save(vehicle);
+    return vehicleMapper.toDto(saved);
   }
 }

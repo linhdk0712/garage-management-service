@@ -9,6 +9,7 @@ import vn.utc.service.entity.WorkOrder;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkOrderRepository extends JpaRepository<WorkOrder, Integer> {
     
@@ -33,14 +34,6 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrder, Integer> {
     Page<WorkOrder> findByStaffIdAndStatus(Integer staffId, String status, Pageable pageable);
     
     /**
-     * Find work orders by staff ID and date range
-     */
-    @Query("SELECT wo FROM WorkOrder wo WHERE wo.staff.id = :staffId AND wo.startTime >= :fromDate AND wo.startTime <= :toDate")
-    List<WorkOrder> findByStaffIdAndDateRange(@Param("staffId") Integer staffId, 
-                                             @Param("fromDate") Instant fromDate, 
-                                             @Param("toDate") Instant toDate);
-    
-    /**
      * Find work orders by staff ID and date range with pagination
      */
     @Query("SELECT wo FROM WorkOrder wo WHERE wo.staff.id = :staffId AND wo.startTime >= :fromDate AND wo.startTime <= :toDate")
@@ -48,23 +41,19 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrder, Integer> {
                                              @Param("fromDate") Instant fromDate, 
                                              @Param("toDate") Instant toDate, 
                                              Pageable pageable);
-    
+
     /**
      * Find work orders by staff ID, status, and date range
      */
     @Query("SELECT wo FROM WorkOrder wo WHERE wo.staff.id = :staffId AND wo.status = :status AND wo.startTime >= :fromDate AND wo.startTime <= :toDate")
-    List<WorkOrder> findByStaffIdAndStatusAndDateRange(@Param("staffId") Integer staffId, 
-                                                      @Param("status") String status,
-                                                      @Param("fromDate") Instant fromDate, 
-                                                      @Param("toDate") Instant toDate);
+    Page<WorkOrder> findByStaffIdAndStatusAndDateRange(@Param("staffId") Integer staffId,
+                                                       @Param("status") String status,
+                                                       @Param("fromDate") Instant fromDate, 
+                                                       @Param("toDate") Instant toDate, 
+                                                       Pageable pageable);
     
     /**
-     * Find work orders by staff ID, status, and date range with pagination
+     * Find work order by appointment ID
      */
-    @Query("SELECT wo FROM WorkOrder wo WHERE wo.staff.id = :staffId AND wo.status = :status AND wo.startTime >= :fromDate AND wo.startTime <= :toDate")
-    Page<WorkOrder> findByStaffIdAndStatusAndDateRange(@Param("staffId") Integer staffId, 
-                                                      @Param("status") String status,
-                                                      @Param("fromDate") Instant fromDate, 
-                                                      @Param("toDate") Instant toDate, 
-                                                      Pageable pageable);
+    Optional<WorkOrder> findByAppointmentId(Integer appointmentId);
 }

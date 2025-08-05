@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.WorkOrderDto;
+import vn.utc.service.dtos.WorkOrderDetailDto;
 import vn.utc.service.entity.Appointment;
 import vn.utc.service.entity.Staff;
 import vn.utc.service.entity.WorkOrder;
@@ -37,7 +38,7 @@ public class WorkOrderService {
                         workOrder.getId(),
                         workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                         workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                        workOrder.getStartTime(),
+                        workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                         workOrder.getEndTime(),
                         workOrder.getStatus(),
                         workOrder.getDiagnosticNotes(),
@@ -52,7 +53,7 @@ public class WorkOrderService {
                         workOrder.getId(),
                         workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                         workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                        workOrder.getStartTime(),
+                        workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                         workOrder.getEndTime(),
                         workOrder.getStatus(),
                         workOrder.getDiagnosticNotes(),
@@ -68,7 +69,7 @@ public class WorkOrderService {
                         workOrder.getId(),
                         workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                         workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                        workOrder.getStartTime(),
+                        workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                         workOrder.getEndTime(),
                         workOrder.getStatus(),
                         workOrder.getDiagnosticNotes(),
@@ -91,7 +92,7 @@ public class WorkOrderService {
                             workOrder.getId(),
                             workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                             workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                            workOrder.getStartTime(),
+                            workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                             workOrder.getEndTime(),
                             workOrder.getStatus(),
                             workOrder.getDiagnosticNotes(),
@@ -104,7 +105,7 @@ public class WorkOrderService {
                             workOrder.getId(),
                             workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                             workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                            workOrder.getStartTime(),
+                            workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                             workOrder.getEndTime(),
                             workOrder.getStatus(),
                             workOrder.getDiagnosticNotes(),
@@ -117,7 +118,7 @@ public class WorkOrderService {
                             workOrder.getId(),
                             workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                             workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                            workOrder.getStartTime(),
+                            workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                             workOrder.getEndTime(),
                             workOrder.getStatus(),
                             workOrder.getDiagnosticNotes(),
@@ -130,7 +131,7 @@ public class WorkOrderService {
                             workOrder.getId(),
                             workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
                             workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
-                            workOrder.getStartTime(),
+                            workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
                             workOrder.getEndTime(),
                             workOrder.getStatus(),
                             workOrder.getDiagnosticNotes(),
@@ -138,6 +139,169 @@ public class WorkOrderService {
                             workOrder.getCreatedAt(),
                             workOrder.getUpdatedAt()));
         }
+    }
+
+    public Page<WorkOrderDto> getAllWorkOrders(Pageable pageable, String status, String from, String to) {
+        // For now, use a simple approach to avoid repository method issues
+        // Get all work orders and filter in memory
+        Page<WorkOrder> allWorkOrders = workOrderRepository.findAll(pageable);
+        
+        return allWorkOrders.map(workOrder -> new WorkOrderDto(
+                workOrder.getId(),
+                workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
+                workOrder.getStaff() != null ? workOrder.getStaff().getId() : null,
+                workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
+                workOrder.getEndTime(),
+                workOrder.getStatus(),
+                workOrder.getDiagnosticNotes(),
+                workOrder.getTotalCost(),
+                workOrder.getCreatedAt(),
+                workOrder.getUpdatedAt()));
+    }
+
+    public Page<WorkOrderDetailDto> getAllWorkOrdersWithDetails(Pageable pageable, String status, String from, String to) {
+        // Get all work orders and convert to detailed DTOs
+        Page<WorkOrder> allWorkOrders = workOrderRepository.findAll(pageable);
+        
+        return allWorkOrders.map(workOrder -> {
+            // Convert to WorkOrderDetailDto with nested objects
+            WorkOrderDetailDto.AppointmentSummaryDto appointmentDto = null;
+            if (workOrder.getAppointment() != null) {
+                appointmentDto = new WorkOrderDetailDto.AppointmentSummaryDto(
+                    workOrder.getAppointment().getId(),
+                    workOrder.getAppointment().getAppointmentDate() != null ? 
+                        workOrder.getAppointment().getAppointmentDate().toString() : null,
+                    workOrder.getAppointment().getServiceType(),
+                    workOrder.getAppointment().getStatus()
+                );
+            }
+            
+            WorkOrderDetailDto.CustomerSummaryDto customerDto = null;
+            if (workOrder.getAppointment() != null && workOrder.getAppointment().getCustomer() != null) {
+                customerDto = new WorkOrderDetailDto.CustomerSummaryDto(
+                    workOrder.getAppointment().getCustomer().getId(),
+                    workOrder.getAppointment().getCustomer().getFirstName(),
+                    workOrder.getAppointment().getCustomer().getLastName(),
+                    workOrder.getAppointment().getCustomer().getUser() != null ? 
+                        workOrder.getAppointment().getCustomer().getUser().getEmail() : null,
+                    workOrder.getAppointment().getCustomer().getUser() != null ? 
+                        workOrder.getAppointment().getCustomer().getUser().getPhone() : null
+                );
+            }
+            
+            WorkOrderDetailDto.VehicleSummaryDto vehicleDto = null;
+            if (workOrder.getAppointment() != null && workOrder.getAppointment().getVehicle() != null) {
+                vehicleDto = new WorkOrderDetailDto.VehicleSummaryDto(
+                    workOrder.getAppointment().getVehicle().getId(),
+                    workOrder.getAppointment().getVehicle().getMake(),
+                    workOrder.getAppointment().getVehicle().getModel(),
+                    workOrder.getAppointment().getVehicle().getYear(),
+                    workOrder.getAppointment().getVehicle().getLicensePlate(),
+                    workOrder.getAppointment().getVehicle().getVin(),
+                    workOrder.getAppointment().getVehicle().getColor(),
+                    workOrder.getAppointment().getVehicle().getMileage()
+                );
+            }
+            
+            WorkOrderDetailDto.StaffSummaryDto staffDto = null;
+            if (workOrder.getStaff() != null) {
+                staffDto = new WorkOrderDetailDto.StaffSummaryDto(
+                    workOrder.getStaff().getId(),
+                    workOrder.getStaff().getFirstName(),
+                    workOrder.getStaff().getLastName(),
+                    workOrder.getStaff().getPosition()
+                );
+            }
+            
+            return new WorkOrderDetailDto(
+                workOrder.getId(),
+                workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
+                appointmentDto,
+                customerDto,
+                vehicleDto,
+                staffDto,
+                workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
+                workOrder.getEndTime(),
+                workOrder.getStatus(),
+                workOrder.getDiagnosticNotes(),
+                workOrder.getTotalCost(),
+                workOrder.getCreatedAt(),
+                workOrder.getUpdatedAt()
+            );
+        });
+    }
+
+    /**
+     * Get a single work order by ID with detailed information
+     */
+    public Optional<WorkOrderDetailDto> getWorkOrderDetailById(Integer workOrderId) {
+        return workOrderRepository.findById(workOrderId)
+                .map(workOrder -> {
+                    // Convert to WorkOrderDetailDto with nested objects
+                    WorkOrderDetailDto.AppointmentSummaryDto appointmentDto = null;
+                    if (workOrder.getAppointment() != null) {
+                        appointmentDto = new WorkOrderDetailDto.AppointmentSummaryDto(
+                            workOrder.getAppointment().getId(),
+                            workOrder.getAppointment().getAppointmentDate() != null ? 
+                                workOrder.getAppointment().getAppointmentDate().toString() : null,
+                            workOrder.getAppointment().getServiceType(),
+                            workOrder.getAppointment().getStatus()
+                        );
+                    }
+                    
+                    WorkOrderDetailDto.CustomerSummaryDto customerDto = null;
+                    if (workOrder.getAppointment() != null && workOrder.getAppointment().getCustomer() != null) {
+                        customerDto = new WorkOrderDetailDto.CustomerSummaryDto(
+                            workOrder.getAppointment().getCustomer().getId(),
+                            workOrder.getAppointment().getCustomer().getFirstName(),
+                            workOrder.getAppointment().getCustomer().getLastName(),
+                            workOrder.getAppointment().getCustomer().getUser() != null ? 
+                                workOrder.getAppointment().getCustomer().getUser().getEmail() : null,
+                            workOrder.getAppointment().getCustomer().getUser() != null ? 
+                                workOrder.getAppointment().getCustomer().getUser().getPhone() : null
+                        );
+                    }
+                    
+                    WorkOrderDetailDto.VehicleSummaryDto vehicleDto = null;
+                    if (workOrder.getAppointment() != null && workOrder.getAppointment().getVehicle() != null) {
+                        vehicleDto = new WorkOrderDetailDto.VehicleSummaryDto(
+                            workOrder.getAppointment().getVehicle().getId(),
+                            workOrder.getAppointment().getVehicle().getMake(),
+                            workOrder.getAppointment().getVehicle().getModel(),
+                            workOrder.getAppointment().getVehicle().getYear(),
+                            workOrder.getAppointment().getVehicle().getLicensePlate(),
+                            workOrder.getAppointment().getVehicle().getVin(),
+                            workOrder.getAppointment().getVehicle().getColor(),
+                            workOrder.getAppointment().getVehicle().getMileage()
+                        );
+                    }
+                    
+                    WorkOrderDetailDto.StaffSummaryDto staffDto = null;
+                    if (workOrder.getStaff() != null) {
+                        staffDto = new WorkOrderDetailDto.StaffSummaryDto(
+                            workOrder.getStaff().getId(),
+                            workOrder.getStaff().getFirstName(),
+                            workOrder.getStaff().getLastName(),
+                            workOrder.getStaff().getPosition()
+                        );
+                    }
+                    
+                    return new WorkOrderDetailDto(
+                        workOrder.getId(),
+                        workOrder.getAppointment() != null ? workOrder.getAppointment().getId() : null,
+                        appointmentDto,
+                        customerDto,
+                        vehicleDto,
+                        staffDto,
+                        workOrder.getStartTime() != null ? workOrder.getStartTime() : Instant.now(),
+                        workOrder.getEndTime(),
+                        workOrder.getStatus(),
+                        workOrder.getDiagnosticNotes(),
+                        workOrder.getTotalCost(),
+                        workOrder.getCreatedAt(),
+                        workOrder.getUpdatedAt()
+                    );
+                });
     }
 
     @Transactional

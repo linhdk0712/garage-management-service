@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.utc.service.dtos.AppointmentDto;
 import vn.utc.service.dtos.CustomerDto;
 import vn.utc.service.entity.Appointment;
+import vn.utc.service.entity.WorkOrder;
 import vn.utc.service.mapper.AppointmentMapper;
 import vn.utc.service.mapper.CustomerMapper;
 import vn.utc.service.repo.AppointmentRepository;
+import vn.utc.service.repo.WorkOrderRepository;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final WorkOrderRepository workOrderRepository;
     private final AppointmentMapper appointmentMapper;
     private final CustomerMapper customerMapper;
 
@@ -34,7 +37,8 @@ public class AppointmentService {
                     // Initialize vehicle to ensure it's loaded
                     Hibernate.initialize(appointment.getVehicle());
                     return appointmentMapper.toDto(appointment);
-                });
+                })
+                .map(this::enrichWithWorkOrder);
     }
 
     @Transactional
@@ -57,7 +61,7 @@ public class AppointmentService {
         }
         
         Appointment savedAppointment = appointmentRepository.save(appointment);
-        return appointmentMapper.toDto(savedAppointment);
+        return enrichWithWorkOrder(appointmentMapper.toDto(savedAppointment));
     }
     
     @Transactional(readOnly = true)
@@ -69,6 +73,7 @@ public class AppointmentService {
                     Hibernate.initialize(appointment.getVehicle());
                     return appointmentMapper.toDto(appointment);
                 })
+                .map(this::enrichWithWorkOrder)
                 .toList();
     }
     
@@ -92,6 +97,7 @@ public class AppointmentService {
                     Hibernate.initialize(appointment.getVehicle());
                     return appointmentMapper.toDto(appointment);
                 })
+                .map(this::enrichWithWorkOrder)
                 .toList();
         
         return new PageImpl<>(appointmentDtos, pageable, customerAppointments.size());
@@ -105,6 +111,7 @@ public class AppointmentService {
                     Hibernate.initialize(appointment.getVehicle());
                     return appointmentMapper.toDto(appointment);
                 })
+                .map(this::enrichWithWorkOrder)
                 .toList();
     }
     
@@ -115,7 +122,8 @@ public class AppointmentService {
                     // Initialize vehicle to ensure it's loaded
                     Hibernate.initialize(appointment.getVehicle());
                     return appointmentMapper.toDto(appointment);
-                });
+                })
+                .map(this::enrichWithWorkOrder);
     }
 
     @Transactional(readOnly = true)
@@ -144,7 +152,7 @@ public class AppointmentService {
             // Initialize vehicle to ensure it's loaded
             Hibernate.initialize(appointment.getVehicle());
             return appointmentMapper.toDto(appointment);
-        });
+        }).map(this::enrichWithWorkOrder);
     }
     
     @Transactional(readOnly = true)
@@ -174,7 +182,7 @@ public class AppointmentService {
             // Initialize vehicle to ensure it's loaded
             Hibernate.initialize(appointment.getVehicle());
             return appointmentMapper.toDto(appointment);
-        });
+        }).map(this::enrichWithWorkOrder);
     }
     
     /**
@@ -199,10 +207,43 @@ public class AppointmentService {
                 .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + appointmentId));
         appointment.setStatus(status);
         appointment.setUpdatedAt(Instant.now());
-        Appointment saved = appointmentRepository.save(appointment);
-        return appointmentMapper.toDto(saved);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return enrichWithWorkOrder(appointmentMapper.toDto(savedAppointment));
     }
     
+    /**
+     * Enrich appointment DTO with work order information
+     */
+    private AppointmentDto enrichWithWorkOrder(AppointmentDto appointmentDto) {
+        Optional<WorkOrder> workOrderOpt = workOrderRepository.findByAppointmentId(appointmentDto.appointmentId());
+        
+        AppointmentDto.WorkOrderSummaryDto workOrderSummary = null;
+        if (workOrderOpt.isPresent()) {
+            WorkOrder workOrder = workOrderOpt.get();
+            workOrderSummary = new AppointmentDto.WorkOrderSummaryDto(
+                workOrder.getId(),
+                workOrder.getStatus(),
+                workOrder.getStartTime(),
+                workOrder.getEndTime()
+            );
+        }
+        
+        return new AppointmentDto(
+            appointmentDto.appointmentId(),
+            appointmentDto.appointmentDate(),
+            appointmentDto.estimatedCompletion(),
+            appointmentDto.status(),
+            appointmentDto.serviceType(),
+            appointmentDto.description(),
+            appointmentDto.vehicle(),
+            appointmentDto.createdAt(),
+            appointmentDto.updatedAt(),
+            appointmentDto.customerId(),
+            appointmentDto.customerRegister(),
+            workOrderSummary
+        );
+    }
+
     /**
      * Parse a date string to Instant. Supports multiple formats:
      * - ISO-8601 format (2023-12-25T10:30:00Z)

@@ -36,5 +36,18 @@ public record AppointmentDto(
     Instant updatedAt,
     // Receptionist-specific fields
     Integer customerId,
-    CustomerRegister customerRegister
-) implements Serializable {}
+    CustomerRegister customerRegister,
+    // Work order information
+    WorkOrderSummaryDto workOrder
+) implements Serializable {
+    
+    /**
+     * Summary DTO for work order information
+     */
+    public record WorkOrderSummaryDto(
+        Integer workOrderId,
+        String status,
+        Instant startTime,
+        Instant endTime
+    ) implements Serializable {}
+}
